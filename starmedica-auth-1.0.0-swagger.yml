@@ -1,0 +1,204 @@
+openapi: 3.0.0
+servers:
+  - url: https://starmedica-sandbox.globant.com/doctors/1.0.0
+    description: Sandbox dummy server (uses test data)
+  - url: https://starmedica.globant.com/doctors/1.0.0
+    description: Production dummy server (uses live data)
+info:
+  description: API for Pre Discharges
+  version: 1.0.0
+  title: Authentication and Account Management API
+  contact:
+    email: diego.matus@globant.com
+  license:
+    name: Apache 2.0
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+tags:
+  - name: Auth
+    description: Operations related to authentication and account management
+paths:
+  /auth/signup:
+    post:
+      tags:
+        - Auth
+      summary: User registration
+      description: Register a new user account.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SignupRequest"
+      responses:
+        "201":
+          description: User registered successfully. An email has been sent to confirm the account.
+        "400":
+          $ref: "./starmedica-components.yml#/components/responses/400"
+        "401":
+          $ref: "./starmedica-components.yml#/components/responses/401"
+        "403":
+          $ref: "./starmedica-components.yml#/components/responses/403"
+        "404":
+          $ref: "./starmedica-components.yml#/components/responses/404"
+        "500":
+          $ref: "./starmedica-components.yml#/components/responses/500"
+
+  /auth/confirm:
+    post:
+      tags:
+        - Auth
+      summary: Confirm user registration
+      description: Confirm a new user account registration with a confirmation token.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ConfirmRegistrationRequest"
+      responses:
+        "200":
+          description: User account successfully confirmed.
+        "400":
+          $ref: "./starmedica-components.yml#/components/responses/400"
+        "401":
+          $ref: "./starmedica-components.yml#/components/responses/401"
+        "403":
+          $ref: "./starmedica-components.yml#/components/responses/403"
+        "404":
+          $ref: "./starmedica-components.yml#/components/responses/404"
+        "500":
+          $ref: "./starmedica-components.yml#/components/responses/500"
+
+  /auth/login:
+    post:
+      tags:
+        - Auth
+      summary: User login
+      description: Authenticate a user and retrieve an access token.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginRequest"
+      responses:
+        "200":
+          description: Login successful.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LoginResponse"
+        "400":
+          $ref: "./starmedica-components.yml#/components/responses/400"
+        "401":
+          $ref: "./starmedica-components.yml#/components/responses/401"
+        "403":
+          $ref: "./starmedica-components.yml#/components/responses/403"
+        "404":
+          $ref: "./starmedica-components.yml#/components/responses/404"
+        "500":
+          $ref: "./starmedica-components.yml#/components/responses/500"
+  /auth/recover-password:
+    post:
+      tags:
+        - Auth
+      summary: Password recovery
+      description: Initiate a password recovery process for a user.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PasswordRecoveryRequest"
+      responses:
+        "200":
+          description: Password recovery initiated. An email with instructions has been sent to the user.
+        "400":
+          $ref: "./starmedica-components.yml#/components/responses/400"
+        "401":
+          $ref: "./starmedica-components.yml#/components/responses/401"
+        "403":
+          $ref: "./starmedica-components.yml#/components/responses/403"
+        "404":
+          $ref: "./starmedica-components.yml#/components/responses/404"
+        "500":
+          $ref: "./starmedica-components.yml#/components/responses/500"
+  /auth/delete-account:
+    delete:
+      tags:
+        - Auth
+      summary: Delete user account
+      description: Permanently delete a user account.
+      responses:
+        "204":
+          description: Account deleted successfully.
+        "400":
+          $ref: "./starmedica-components.yml#/components/responses/400"
+        "401":
+          $ref: "./starmedica-components.yml#/components/responses/401"
+        "403":
+          $ref: "./starmedica-components.yml#/components/responses/403"
+        "404":
+          $ref: "./starmedica-components.yml#/components/responses/404"
+        "500":
+          $ref: "./starmedica-components.yml#/components/responses/500"
+
+components:
+  schemas:
+    SignupRequest:
+      type: object
+      title: Patient
+      properties:
+        generalInformation:
+          $ref: "./starmedica-components.yml#/components/schemas/GeneralInformation"
+        contactInformation:
+          $ref: "./starmedica-components.yml#/components/schemas/ContactInformation"
+        password:
+          type: string
+          format: password
+          description: User's password.
+      required:
+        - generalInformation
+        - contactInformation
+        - password
+    ConfirmRegistrationRequest:
+      type: object
+      properties:
+        token:
+          type: string
+          description: Confirmation token received via email.
+      required:
+        - token
+
+    LoginRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+          description: User's email address.
+        password:
+          type: string
+          format: password
+          description: User's password.
+      required:
+        - email
+        - password
+    LoginResponse:
+      type: object
+      properties:
+        accessToken:
+          type: string
+          description: JWT access token for authenticated sessions.
+        refreshToken:
+          type: string
+          description: JWT refresh token for renewing the access token.
+    PasswordRecoveryRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+          description: User's email address associated with the account.
+      required:
+        - email

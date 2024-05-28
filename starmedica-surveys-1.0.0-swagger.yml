@@ -1,0 +1,291 @@
+openapi: 3.0.0
+servers:
+  - url: https://starmedica-sandbox.globant.com/doctors/1.0.0
+    description: Sandbox dummy server (uses test data)
+  - url: https://starmedica.globant.com/doctors/1.0.0
+    description: Production dummy server (uses live data)
+info:
+  description: API for Credentialized doctors
+  version: 1.0.0
+  title: Surveys
+  contact:
+    email: diego.matus@globant.com
+  license:
+    name: Apache 2.0
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+tags:
+  - name: Surveys
+    description: Operations available to handle professional's surveys
+paths:
+  /api/v1/health-professionals/{id}/surveys:
+    get:
+      tags:
+        - Surveys
+      summary: Get surveys for a credentialed doctor
+      description: Retrieves the surveys associated with a credentialed doctor.
+      operationId: getHealthProfessionalSurveys
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the credentialed doctor
+          schema:
+            type: string
+        - name: status
+          in: query
+          required: false
+          description: Filter patients by medical facility (optional)
+          schema:
+            type: string
+          example: pending
+      responses:
+        "200":
+          description: An array of surveys retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Survey"
+        "400":
+          $ref: "./starmedica-components.yml#/components/responses/400"
+        "401":
+          $ref: "./starmedica-components.yml#/components/responses/401"
+        "403":
+          $ref: "./starmedica-components.yml#/components/responses/403"
+        "404":
+          $ref: "./starmedica-components.yml#/components/responses/404"
+        "500":
+          $ref: "./starmedica-components.yml#/components/responses/500"
+  /api/v1/health-professionals/{id}/surveys/{sId}:
+    get:
+      tags:
+        - Surveys
+      summary: Get a survey for a credentialed doctor
+      description: Retrieves the survey for a credentialed doctor.
+      operationId: getHealthProfessionalSurvey
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the credentialed doctor
+          schema:
+            type: string
+        - name: sId
+          in: path
+          required: true
+          description: ID of the survey
+          schema:
+            type: string
+        - name: status
+          in: query
+          required: false
+          description: Filter patients by medical facility (optional)
+          schema:
+            type: string
+          example: pending
+      responses:
+        "200":
+          description: Get a survey retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Survey"
+        "400":
+          $ref: "./starmedica-components.yml#/components/responses/400"
+        "401":
+          $ref: "./starmedica-components.yml#/components/responses/401"
+        "403":
+          $ref: "./starmedica-components.yml#/components/responses/403"
+        "404":
+          $ref: "./starmedica-components.yml#/components/responses/404"
+        "500":
+          $ref: "./starmedica-components.yml#/components/responses/500"
+    post:
+      tags:
+        - Surveys
+      summary: Submit a survey response for a credentialed doctor
+      description: Submits a response for a specific survey associated with a health professional.
+      operationId: submitSurveyResponse
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the health professional
+          schema:
+            type: string
+        - name: sId
+          in: path
+          required: true
+          description: ID of the survey
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SurveyResponse"
+      responses:
+        "201":
+          description: Survey response submitted successfully
+        "400":
+          $ref: "./starmedica-components.yml#/components/responses/400"
+        "401":
+          $ref: "./starmedica-components.yml#/components/responses/401"
+        "403":
+          $ref: "./starmedica-components.yml#/components/responses/403"
+        "404":
+          $ref: "./starmedica-components.yml#/components/responses/404"
+        "500":
+          $ref: "./starmedica-components.yml#/components/responses/500"
+  /api/v1/health-professionals/{pId}/events/{eId}/surveys:
+    post:
+      tags:
+        - Surveys
+      summary: Submits a satisfaction survey response for a specific event of a health professional
+      description: A new survey
+      operationId: submitHealthProfessionalEventSurveyResponse
+      parameters:
+        - name: pId
+          in: path
+          required: true
+          description: ID of the health professional
+          schema:
+            type: string
+        - name: eId
+          in: path
+          required: true
+          description: ID of the event associated with the health professional
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SurveyEventRequest"
+      responses:
+        "201":
+          description: Response success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SurveyEventResponse"
+        "400":
+          $ref: "./starmedica-components.yml#/components/responses/400"
+        "401":
+          $ref: "./starmedica-components.yml#/components/responses/401"
+        "403":
+          $ref: "./starmedica-components.yml#/components/responses/403"
+        "404":
+          $ref: "./starmedica-components.yml#/components/responses/404"
+        "500":
+          $ref: "./starmedica-components.yml#/components/responses/500"
+components:
+  schemas:
+    SurveyResponse:
+      type: object
+      properties:
+        responses:
+          type: array
+          items:
+            $ref: "#/components/schemas/IndividualResponse"
+      required:
+        - responses
+    IndividualResponse:
+      type: object
+      properties:
+        questionId:
+          type: string
+          format: uuid
+          description: ID of the question being answered
+        answer:
+          oneOf:
+            - type: string
+              description: Text answer for open and multiple choice questions
+            - type: integer
+              format: int32
+              description: Rating answer for rating questions
+              minimum: 1
+              maximum: 5
+            - type: array
+              description: Selected options for multiple choice questions
+              items:
+                type: string
+      required:
+        - questionId
+        - answer
+    SurveyEventRequest:
+      type: object
+      properties:
+        rating:
+          type: integer
+          format: int32
+          description: Satisfaction rating from 1 to 5
+          minimum: 1
+          maximum: 5
+        dissatisfactionTags:
+          type: array
+          items:
+            type: string
+          description: Tags describing reasons for dissatisfaction (applicable only if the rating is 1 or 2)
+        comments:
+          type: string
+          description: Additional comments from the user
+      required:
+        - rating
+    SurveyEventResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+          description: Answer id
+          example: 12345
+      required:
+        - rating
+    Survey:
+      type: object
+      properties:
+        surveyId:
+          type: string
+          format: uuid
+          description: Unique identifier for the survey
+        title:
+          type: string
+          description: Title of the survey
+        description:
+          type: string
+          description: Detailed description of the survey
+        questions:
+          type: array
+          items:
+            $ref: "#/components/schemas/Question"
+      required:
+        - surveyId
+        - title
+        - questions
+    Question:
+      type: object
+      properties:
+        questionId:
+          type: string
+          format: uuid
+          description: Unique identifier for the question
+        text:
+          type: string
+          description: The question text
+        type:
+          type: string
+          description: The type of question
+          enum: [open, multiple_choice, rating]
+        options:
+          type: array
+          description: Available options for multiple choice questions
+          items:
+            type: string
+      required:
+        - questionId
+        - text
+        - type

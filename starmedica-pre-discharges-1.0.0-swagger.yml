@@ -1,0 +1,135 @@
+openapi: 3.0.0
+servers:
+  - url: https://starmedica-sandbox.globant.com/doctors/1.0.0
+    description: Sandbox dummy server (uses test data)
+  - url: https://starmedica.globant.com/doctors/1.0.0
+    description: Production dummy server (uses live data)
+info:
+  description: API for Pre Discharges
+  version: 1.0.0
+  title: Pre Discharges
+  contact:
+    email: diego.matus@globant.com
+  license:
+    name: Apache 2.0
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+tags:
+  - name: Pre Discharges
+    description: Operations available to handle pre discharge information
+paths:
+  /pre-discharges:
+    post:
+      tags:
+        - Pre Discharges
+      summary: Create a pre discharge entry
+      operationId: createPreDischarge
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PreDischargeRequest"
+      responses:
+        "201":
+          description: Pre discharge entry created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "./starmedica-components.yml#/components/schemas/PreDischargeResponse"
+        "400":
+          $ref: "./starmedica-components.yml#/components/responses/400"
+        "401":
+          $ref: "./starmedica-components.yml#/components/responses/401"
+        "403":
+          $ref: "./starmedica-components.yml#/components/responses/403"
+        "404":
+          $ref: "./starmedica-components.yml#/components/responses/404"
+        "500":
+          $ref: "./starmedica-components.yml#/components/responses/500"
+  /pre-discharges/{id}:
+    get:
+      tags:
+        - Pre Discharges
+      summary: Get a pre discharge entry by ID
+      operationId: getPreDischarge
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the pre discharge entry to retrieve
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Pre discharge entry retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: "./starmedica-components.yml#/components/schemas/PreDischargeResponse"
+        "400":
+          $ref: "./starmedica-components.yml#/components/responses/400"
+        "401":
+          $ref: "./starmedica-components.yml#/components/responses/401"
+        "403":
+          $ref: "./starmedica-components.yml#/components/responses/403"
+        "404":
+          $ref: "./starmedica-components.yml#/components/responses/404"
+        "500":
+          $ref: "./starmedica-components.yml#/components/responses/500"
+    patch:
+      tags:
+        - Pre Discharges
+      summary: Update a pre discharge entry by ID
+      operationId: updatePreDischarge
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the pre discharge entry to update
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PreDischargeUpdate"
+      responses:
+        "200":
+          description: Pre discharge entry updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "./starmedica-components.yml#/components/schemas/PreDischargeResponse"
+        "400":
+          $ref: "./starmedica-components.yml#/components/responses/400"
+        "401":
+          $ref: "./starmedica-components.yml#/components/responses/401"
+        "403":
+          $ref: "./starmedica-components.yml#/components/responses/403"
+        "404":
+          $ref: "./starmedica-components.yml#/components/responses/404"
+        "500":
+          $ref: "./starmedica-components.yml#/components/responses/500"
+components:
+  schemas:
+    PreDischargeRequest:
+      type: object
+      properties:
+        episodeId:
+          type: string
+          description: ID of episode for a patient
+          example: "4323"
+        comments:
+          type: string
+          nullable: true
+          description: Additional comments for the shift
+          example: "Gracias!"
+    PreDischargeUpdate:
+      type: object
+      properties:
+        comments:
+          type: string
+          nullable: true
+          description: Additional comments for the shift
+          example: "Gracias!"

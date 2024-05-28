@@ -1,0 +1,192 @@
+openapi: 3.0.0
+servers:
+  - url: https://starmedica-sandbox.globant.com/productivity/1.0.0
+    description: Sandbox dummy server (uses test data)
+  - url: https://starmedica.globant.com/productivity/1.0.0
+    description: Production dummy server (uses live data)
+info:
+  description: API for Productivity
+  version: "1.0.0"
+  title: Productivity
+  contact:
+    email: you@your-company.com
+  license:
+    name: Apache 2.0
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+tags:
+  - name: Productivity
+    description: Operations available to handle productivity information
+paths:
+  /productivity/{id}:
+    get:
+      tags:
+        - Productivity
+      summary: Gets a patient
+      operationId: getPatient
+      description: |
+        By passing in the appropriate options, you can search for
+        available inventory in the system
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Patient id
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Patient retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: "./starmedica-components.yml#/components/schemas/Patient"
+        "400":
+          $ref: "./starmedica-components.yml#/components/responses/400"
+        "401":
+          $ref: "./starmedica-components.yml#/components/responses/401"
+        "403":
+          $ref: "./starmedica-components.yml#/components/responses/403"
+        "404":
+          $ref: "./starmedica-components.yml#/components/responses/404"
+        "500":
+          $ref: "./starmedica-components.yml#/components/responses/500"
+  /productivity/{id}/episodes:
+    get:
+      tags:
+        - Episodes
+      summary: Gets a productivity episodes
+      operationId: getPatientEpisodes
+      description: |
+        By passing in the appropriate options, you can search for
+        available inventory in the system
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Patient id
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Patient episodes retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "./starmedica-components.yml#/components/schemas/Episode"
+        "400":
+          $ref: "./starmedica-components.yml#/components/responses/400"
+        "401":
+          $ref: "./starmedica-components.yml#/components/responses/401"
+        "403":
+          $ref: "./starmedica-components.yml#/components/responses/403"
+        "404":
+          $ref: "./starmedica-components.yml#/components/responses/404"
+        "500":
+          $ref: "./starmedica-components.yml#/components/responses/500"
+  /productivity/{id}/episodes/{episodeId}/studies:
+    get:
+      tags:
+        - Studies
+      summary: Gets a productivity episode studies
+      operationId: getPatientEpisodesStudies
+      description: |
+        By passing in the appropriate options, you can search for
+        available inventory in the system
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Patient Id
+          schema:
+            type: string
+        - name: episodeId
+          in: path
+          required: true
+          description: Patient Episode Id
+          schema:
+            type: string
+        - name: type
+          in: query
+          required: true
+          description: Type of study lab or imaging (L/I)
+          schema:
+            type: string
+            description: Type of study lab or imaging (L/I)
+            maxLength: 1
+            example: "L"
+      responses:
+        "200":
+          description: Patient episodes retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Study"
+        "400":
+          $ref: "./starmedica-components.yml#/components/responses/400"
+        "401":
+          $ref: "./starmedica-components.yml#/components/responses/401"
+        "403":
+          $ref: "./starmedica-components.yml#/components/responses/403"
+        "404":
+          $ref: "./starmedica-components.yml#/components/responses/404"
+        "500":
+          $ref: "./starmedica-components.yml#/components/responses/500"
+
+components:
+  schemas:
+    Study:
+      type: object
+      properties:
+        benefitId:
+          type: string
+          maxLength: 10
+          description: ID of the benefit (prestacion)
+        benefitName:
+          type: string
+          maxLength: 100
+          description: Name of the benefit
+        subscriptor:
+          type: string
+          maxLength: 100
+          description: Subscriptor
+        subscription:
+          type: string
+          maxLength: 100
+          description: Subscription
+        category:
+          type: string
+          maxLength: 20
+          description: Category of the study
+        subcategory:
+          type: string
+          maxLength: 20
+          description: Subcategory of the study
+        startDate:
+          type: string
+          description: Start date of the benefit YYYY-MM-DD (IBGDT)
+          example: "2023-12-22"
+          maxLength: 10
+        startTime:
+          type: string
+          description: Start time of the benefit HH:MM (IBZT)
+          example: "14:01"
+          maxLength: 5
+        resultStatus:
+          type: string
+          maxLength: 2
+          description: Status of the result (ESTADO_RES)
+          example: "A"
+        resURL:
+          type: string
+          maxLength: 400
+          example: "http://172.31.2.72:8080/launch?&AccessionNumber=-24-24-24l4aZFSJ11qYlipe2RyXqzCtSOWoaS5B6CUEkF4-2BDKKM-3D&action=viewaccession&e"
+          description: URL of the result of this study
+        intURL:
+          type: string
+          maxLength: 400
+          example: "http://172.31.2.72:8080/launch?&AccessionNumber=-24-24-24l4aZFSJ11qYlipe2RyXqzCtSOWoaS5B6CUEkF4-2BDKKM-3D&action=viewaccession&e"
+          description: URL of the interpretation of this study

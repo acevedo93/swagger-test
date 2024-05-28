@@ -1,0 +1,502 @@
+openapi: 3.0.0
+servers:
+  # Added by API Auto Mocking Plugin
+  - description: SwaggerHub API Auto Mocking
+    url: https://virtserver.swaggerhub.com/StarMedica/Notifications/1.0.0
+  - url: https://starmedica-sandbox.globant.com/doctors/1.0.0
+    description: Sandbox dummy server (uses test data)
+  - url: https://starmedica.globant.com/doctors/1.0.0
+    description: Production dummy server (uses live data)
+info:
+  description: API for Notifications
+  version: 1.0.0
+  title: Notifications
+  contact:
+    email: diego.matus@globant.com
+  license:
+    name: Apache 2.0
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+tags:
+  - name: Notifications
+    description: Operations available to handle notifications
+  - name: Notifications for professionals
+    description: Operations available to handle professional's notifications
+  - name: Notifications types for professionals
+    description: Operations available to handle notifications types
+paths:
+  /api/v1/health-professionals/{professionalId}/notifications:
+    get:
+      summary: Retrieve a list of notifications for a specific professional.
+      tags:
+        - Notifications for professionals
+      description: This endpoint retrieves all notifications for the professional with the specified ID.
+      parameters:
+        - in: path
+          name: professionalId
+          required: true
+          schema:
+            type: string
+          description: The unique identifier for the prfessional
+          example: "423"
+      responses:
+        "200":
+          description: A list of notifications was successfully retrieved.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotificationsResponse"
+        "400":
+          $ref: "./starmedica-components.yml#/components/responses/400"
+        "401":
+          $ref: "./starmedica-components.yml#/components/responses/401"
+        "403":
+          $ref: "./starmedica-components.yml#/components/responses/403"
+        "404":
+          $ref: "./starmedica-components.yml#/components/responses/404"
+        "500":
+          $ref: "./starmedica-components.yml#/components/responses/500"
+  /api/v1/health-professionals/{professionalId}/notifications/call:
+    post:
+      summary: Make a call to a professional with a notification message.
+      tags:
+        - Notifications for professionals
+      description: This endpoint initiates a call to the professional with the specified ID and plays a notification message based on the provided notification type.
+      parameters:
+        - in: path
+          name: professionalId
+          required: true
+          schema:
+            type: string
+          description: The unique identifier for the professional.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                notificationType:
+                  type: string
+                  description: The type of notification to be used for the call.
+              required:
+                - notificationType
+      responses:
+        "204":
+          description: The call was successfully initiated with the notification message.
+        "400":
+          $ref: "./starmedica-components.yml#/components/responses/400"
+        "401":
+          $ref: "./starmedica-components.yml#/components/responses/401"
+        "403":
+          $ref: "./starmedica-components.yml#/components/responses/403"
+        "404":
+          $ref: "./starmedica-components.yml#/components/responses/404"
+        "500":
+          $ref: "./starmedica-components.yml#/components/responses/500"
+  /api/v1/health-professionals/{professionalId}/notifications/{notificationId}:
+    get:
+      summary: Retrieve a specific notification for a specific professional.
+      tags:
+        - Notifications for professionals
+      description: This endpoint retrieves a notification with the specified for the professional with the specified ID.
+      parameters:
+        - in: path
+          name: professionalId
+          required: true
+          schema:
+            type: string
+          description: The unique identifier for the professional
+          example: "423"
+        - in: path
+          name: notificationId
+          required: true
+          schema:
+            type: string
+          description: The unique identifier for the notification
+          example: "110001413"
+        - name: status
+          in: query
+          required: false
+          description: Filter notifications by status (optional)
+          schema:
+            type: string
+      responses:
+        "200":
+          description: A notification was successfully retrieved.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotificationResponse"
+        "400":
+          $ref: "./starmedica-components.yml#/components/responses/400"
+        "401":
+          $ref: "./starmedica-components.yml#/components/responses/401"
+        "403":
+          $ref: "./starmedica-components.yml#/components/responses/403"
+        "404":
+          $ref: "./starmedica-components.yml#/components/responses/404"
+        "500":
+          $ref: "./starmedica-components.yml#/components/responses/500"
+  ? /api/v1/health-professionals/{professionalId}/notifications/{notificationId}/status
+  : patch:
+      summary: Update status for a specific notification for a specific professional.
+      tags:
+        - Notifications for professionals
+      description: This endpoint updates a specific notification status for the professional with the specified ID.
+      parameters:
+        - in: path
+          name: professionalId
+          required: true
+          schema:
+            type: string
+          description: The unique identifier for the professional
+          example: "423"
+        - in: path
+          name: notificationId
+          required: true
+          schema:
+            type: string
+          description: The unique identifier for the notification
+          example: "110001413"
+      responses:
+        "200":
+          description: A notification was successfully retrieved.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotificationResponse"
+        "400":
+          $ref: "./starmedica-components.yml#/components/responses/400"
+        "401":
+          $ref: "./starmedica-components.yml#/components/responses/401"
+        "403":
+          $ref: "./starmedica-components.yml#/components/responses/403"
+        "404":
+          $ref: "./starmedica-components.yml#/components/responses/404"
+        "500":
+          $ref: "./starmedica-components.yml#/components/responses/500"
+  /api/v1/notifications/types:
+    get:
+      summary: Retrieve a notification types.
+      tags:
+        - Notifications types for professionals
+      description: This endpoint retrieves a notification types.
+      responses:
+        "200":
+          description: A notification was successfully retrieved.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotificationTypesResponse"
+        "400":
+          $ref: "./starmedica-components.yml#/components/responses/400"
+        "401":
+          $ref: "./starmedica-components.yml#/components/responses/401"
+        "403":
+          $ref: "./starmedica-components.yml#/components/responses/403"
+        "404":
+          $ref: "./starmedica-components.yml#/components/responses/404"
+        "500":
+          $ref: "./starmedica-components.yml#/components/responses/500"
+    post:
+      summary: Create a notification type.
+      tags:
+        - Notifications types for professionals
+      description: This endpoint creates a notification type.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateNotificationTypeRequest"
+      responses:
+        "201":
+          description: A notification was successfully created.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotificationType"
+        "400":
+          $ref: "./starmedica-components.yml#/components/responses/400"
+        "401":
+          $ref: "./starmedica-components.yml#/components/responses/401"
+        "403":
+          $ref: "./starmedica-components.yml#/components/responses/403"
+        "404":
+          $ref: "./starmedica-components.yml#/components/responses/404"
+        "500":
+          $ref: "./starmedica-components.yml#/components/responses/500"
+  /api/v1/notifications/types/{typeId}/status:
+    patch:
+      summary: Retrieve a specific notification for a specific professional.
+      tags:
+        - Notifications types for professionals
+      description: This endpoint retrieves a notification with the specified for the professional with the specified ID.
+      parameters:
+        - in: path
+          name: typeId
+          required: true
+          schema:
+            type: string
+          description: The unique identifier for the notification type
+          example: "789"
+      responses:
+        "200":
+          description: A notification was successfully retrieved.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotificationTypeStatusResponse"
+        "400":
+          $ref: "./starmedica-components.yml#/components/responses/400"
+        "401":
+          $ref: "./starmedica-components.yml#/components/responses/401"
+        "403":
+          $ref: "./starmedica-components.yml#/components/responses/403"
+        "404":
+          $ref: "./starmedica-components.yml#/components/responses/404"
+        "500":
+          $ref: "./starmedica-components.yml#/components/responses/500"
+  /api/v1/notifications:
+    get:
+      summary: Retrieve a list of notifications.
+      tags:
+        - Notifications
+      description: This endpoint retrieves a list notifications.
+      responses:
+        "200":
+          description: A notification was successfully created.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotificationsResponse"
+        "400":
+          $ref: "./starmedica-components.yml#/components/responses/400"
+        "401":
+          $ref: "./starmedica-components.yml#/components/responses/401"
+        "403":
+          $ref: "./starmedica-components.yml#/components/responses/403"
+        "404":
+          $ref: "./starmedica-components.yml#/components/responses/404"
+        "500":
+          $ref: "./starmedica-components.yml#/components/responses/500"
+    post:
+      summary: Create a notification.
+      tags:
+        - Notifications
+      description: This endpoint creates a notification type.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateNotification"
+      responses:
+        "201":
+          description: A notification was successfully created.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Notification"
+        "400":
+          $ref: "./starmedica-components.yml#/components/responses/400"
+        "401":
+          $ref: "./starmedica-components.yml#/components/responses/401"
+        "403":
+          $ref: "./starmedica-components.yml#/components/responses/403"
+        "404":
+          $ref: "./starmedica-components.yml#/components/responses/404"
+        "500":
+          $ref: "./starmedica-components.yml#/components/responses/500"
+  /api/v1/notifications/{notificationId}:
+    get:
+      summary: Retrieve a notification.
+      tags:
+        - Notifications
+      description: This endpoint retrieves a list notifications.
+      parameters:
+        - in: path
+          name: notificationId
+          required: true
+          schema:
+            type: string
+          description: The unique identifier for the notification
+          example: "110001413"
+      responses:
+        "200":
+          description: A notification was successfully created.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Notification"
+        "400":
+          $ref: "./starmedica-components.yml#/components/responses/400"
+        "401":
+          $ref: "./starmedica-components.yml#/components/responses/401"
+        "403":
+          $ref: "./starmedica-components.yml#/components/responses/403"
+        "404":
+          $ref: "./starmedica-components.yml#/components/responses/404"
+        "500":
+          $ref: "./starmedica-components.yml#/components/responses/500"
+    patch:
+      summary: Retrieve a notification.
+      tags:
+        - Notifications
+      description: This endpoint retrieves a list notifications.
+      parameters:
+        - in: path
+          name: notificationId
+          required: true
+          schema:
+            type: string
+          description: The unique identifier for the notification
+          example: "110001413"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Notification"
+      responses:
+        "200":
+          description: A notification was successfully created.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotificationsResponse"
+        "400":
+          $ref: "./starmedica-components.yml#/components/responses/400"
+        "401":
+          $ref: "./starmedica-components.yml#/components/responses/401"
+        "403":
+          $ref: "./starmedica-components.yml#/components/responses/403"
+        "404":
+          $ref: "./starmedica-components.yml#/components/responses/404"
+        "500":
+          $ref: "./starmedica-components.yml#/components/responses/500"
+    delete:
+      summary: Retrieve a notification.
+      tags:
+        - Notifications
+      description: This endpoint retrieves a list notifications.
+      parameters:
+        - in: path
+          name: notificationId
+          required: true
+          schema:
+            type: string
+          description: The unique identifier for the notification
+          example: "110001413"
+      responses:
+        "200":
+          description: A notification was successfully deleted.
+        "400":
+          $ref: "./starmedica-components.yml#/components/responses/400"
+        "401":
+          $ref: "./starmedica-components.yml#/components/responses/401"
+        "403":
+          $ref: "./starmedica-components.yml#/components/responses/403"
+        "404":
+          $ref: "./starmedica-components.yml#/components/responses/404"
+        "500":
+          $ref: "./starmedica-components.yml#/components/responses/500"
+components:
+  schemas:
+    Notification:
+      type: object
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+        status:
+          type: string
+        priority:
+          type: string
+        title:
+          type: string
+        body:
+          type: string
+        deeplink:
+          type: string
+      example:
+        id: "110001413"
+        type: "Productividad"
+        status: "read"
+        priority: "HIGH"
+        title: "¡Estás a un episodio de alcanzar tu objetivo!"
+        body: "Estás a un paso de alcanzar tu meta, no bajes la guardia!"
+        deeplink: "/notificationCenter/productivity/423"
+    NotificationResponse:
+      $ref: "#/components/schemas/Notification"
+    NotificationsResponse:
+      type: array
+      items:
+        $ref: "#/components/schemas/Notification"
+      example:
+        - id: "110001413"
+          type: "Productividad"
+          status: "read"
+          priority: "HIGH"
+          title: "¡Estás a un episodio de alcanzar tu objetivo!"
+          body: "Estás a un paso de alcanzar tu meta, no bajes la guardia!"
+          deeplink: "/notificationCenter/productivity/423"
+    NotificationType:
+      type: object
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+        status:
+          type: boolean
+      example:
+        id: "17"
+        type: "Productividad"
+        status: true
+    NotificationTypesResponse:
+      type: array
+      items:
+        $ref: "#/components/schemas/NotificationType"
+      example:
+        - id: "17"
+          type: "Productividad"
+          status: true
+    NotificationTypeStatusResponse:
+      $ref: "#/components/schemas/NotificationType"
+    CreateNotification:
+      type: object
+      properties:
+        type:
+          type: string
+        status:
+          type: string
+        priority:
+          type: string
+        title:
+          type: string
+        body:
+          type: string
+        deeplink:
+          type: string
+      example:
+        type: "Productividad"
+        status: "read"
+        priority: "HIGH"
+        title: "¡Estás a un episodio de alcanzar tu objetivo!"
+        body: "Estás a un paso de alcanzar tu meta, no bajes la guardia!"
+        deeplink: "/notificationCenter/productivity/423"
+    CreateNotificationTypeRequest:
+      type: object
+      properties:
+        type:
+          type: string
+        status:
+          type: string
+      required:
+        - type
+        - status
+      example:
+        type: "Productividad"
+        status: true

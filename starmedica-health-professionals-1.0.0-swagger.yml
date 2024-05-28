@@ -1,0 +1,879 @@
+openapi: 3.0.0
+servers:
+  - url: https://starmedica-sandbox.globant.com/api/v1
+    description: Sandbox dummy server (uses test data)
+  - url: https://starmedica.globant.com/api/v1
+    description: Production dummy server (uses live data)
+info:
+  description: API for Health Professionals
+  version: 1.0.0
+  title: Health Professionals
+  contact:
+    email: diego.matus@globant.com
+  license:
+    name: Apache 2.0
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+tags:
+  - name: Health Professionals
+    description: Operations available to handle health professionals' information
+  - name: Documents
+    description: Operations available to handle health professionals' documents
+  - name: Shifts
+    description: Operations available to handle health professionals' shifts schedule
+  - name: Episodes
+    description: Operations available to handle health professionals' episodes
+  - name: Patients
+    description: Operations available to handle health professional's patients
+  - name: Studies
+    description: Operations available to handle health professionals' studies
+  - name: Pre-discharges
+    description: Operations available to handle health professionals' pre discharges
+  - name: Surveys
+    description: Operations available to handle health professionals' surveys
+  - name: Transactions
+    description: Operations available to handle health professionals' transactions
+  - name: Notifications
+    description: Operations available to handle health professionals' notifications
+  - name: Productivity
+    description: Operations available to handle health professionals' productivity
+paths:
+  /health-professionals:
+    post:
+      tags:
+        - Health Professionals
+      summary: Create a credentialed request for a health professional
+      operationId: createHealthProfessionalRequest
+      description: |
+        By passing the credentialed health information, allow create a new credentialed request for a health professional
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: "#/components/schemas/HealthProfessionalRequest"
+      responses:
+        "200":
+          description: Doctor retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthProfessionalResponse"
+        "400":
+          $ref: "./starmedica-components.yml#/components/responses/400"
+        "401":
+          $ref: "./starmedica-components.yml#/components/responses/401"
+        "403":
+          $ref: "./starmedica-components.yml#/components/responses/403"
+        "404":
+          $ref: "./starmedica-components.yml#/components/responses/404"
+        "500":
+          $ref: "./starmedica-components.yml#/components/responses/500"
+  /health-professionals/{id}:
+    get:
+      tags:
+        - Health Professionals
+      summary: Get information for a health professional
+      operationId: getHealthProfessionalInformation
+      description: |
+        By passing the credentialed health professional ID, get the general information for the health professional requested
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Credentialed health professional ID
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Doctor retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthProfessionalResponse"
+        "400":
+          $ref: "./starmedica-components.yml#/components/responses/400"
+        "401":
+          $ref: "./starmedica-components.yml#/components/responses/401"
+        "403":
+          $ref: "./starmedica-components.yml#/components/responses/403"
+        "404":
+          $ref: "./starmedica-components.yml#/components/responses/404"
+        "500":
+          $ref: "./starmedica-components.yml#/components/responses/500"
+    patch:
+      tags:
+        - Health Professionals
+      summary: Update information for a health professional
+      operationId: updateHealthProfessional
+      description: |
+        By passing the credentialed health professional ID, allow edit the information for a health professional
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Credentialed health professional ID
+          schema:
+            type: string
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: "#/components/schemas/HealthProfessionalUpdate"
+      responses:
+        "200":
+          description: Doctor retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthProfessionalResponse"
+        "400":
+          $ref: "./starmedica-components.yml#/components/responses/400"
+        "401":
+          $ref: "./starmedica-components.yml#/components/responses/401"
+        "403":
+          $ref: "./starmedica-components.yml#/components/responses/403"
+        "404":
+          $ref: "./starmedica-components.yml#/components/responses/404"
+        "500":
+          $ref: "./starmedica-components.yml#/components/responses/500"
+  /health-professionals/{id}/degrees:
+    get:
+      tags:
+        - Health Professionals
+      summary: Get degrees and licenses of a health professional by ID
+      operationId: getDegrees
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the health professional to retrieve
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Episodes and licenses of the health professional retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Degree"
+        "400":
+          $ref: "./starmedica-components.yml#/components/responses/400"
+        "401":
+          $ref: "./starmedica-components.yml#/components/responses/401"
+        "403":
+          $ref: "./starmedica-components.yml#/components/responses/403"
+        "404":
+          $ref: "./starmedica-components.yml#/components/responses/404"
+        "500":
+          $ref: "./starmedica-components.yml#/components/responses/500"
+  /degrees:
+    post:
+      tags:
+        - Episodes
+      summary: Save a degree for a health professional
+      operationId: createDegrees
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: "#/components/schemas/Degree"
+      responses:
+        "200":
+          description: Episodes for a health professional created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Degree"
+        "400":
+          $ref: "./starmedica-components.yml#/components/responses/400"
+        "401":
+          $ref: "./starmedica-components.yml#/components/responses/401"
+        "403":
+          $ref: "./starmedica-components.yml#/components/responses/403"
+        "404":
+          $ref: "./starmedica-components.yml#/components/responses/404"
+        "500":
+          $ref: "./starmedica-components.yml#/components/responses/500"
+  /health-professionals/{id}/documents:
+    get:
+      tags:
+        - Documents
+      summary: Get documents of a credentialed health professional
+      operationId: getDocuments
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the credentialed health professional
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Documents retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/DocumentResponse"
+        "400":
+          $ref: "./starmedica-components.yml#/components/responses/400"
+        "401":
+          $ref: "./starmedica-components.yml#/components/responses/401"
+        "403":
+          $ref: "./starmedica-components.yml#/components/responses/403"
+        "404":
+          $ref: "./starmedica-components.yml#/components/responses/404"
+        "500":
+          $ref: "./starmedica-components.yml#/components/responses/500"
+  /documents:
+    post:
+      tags:
+        - Documents
+      summary: Upload a document for a credentialed health professional
+      operationId: uploadDocument
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: "#/components/schemas/DocumentRequest"
+      responses:
+        "201":
+          description: Document uploaded successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DocumentResponse"
+        "400":
+          $ref: "./starmedica-components.yml#/components/responses/400"
+        "401":
+          $ref: "./starmedica-components.yml#/components/responses/401"
+        "403":
+          $ref: "./starmedica-components.yml#/components/responses/403"
+        "404":
+          $ref: "./starmedica-components.yml#/components/responses/404"
+        "500":
+          $ref: "./starmedica-components.yml#/components/responses/500"
+  /documents/{id}:
+    patch:
+      tags:
+        - Documents
+      summary: Update a document of a credentialed health professional
+      operationId: updateDocument
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the document to update
+          schema:
+            type: string
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: "#/components/schemas/DocumentRequest"
+      responses:
+        "200":
+          description: Document updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DocumentResponse"
+        "400":
+          $ref: "./starmedica-components.yml#/components/responses/400"
+        "401":
+          $ref: "./starmedica-components.yml#/components/responses/401"
+        "403":
+          $ref: "./starmedica-components.yml#/components/responses/403"
+        "404":
+          $ref: "./starmedica-components.yml#/components/responses/404"
+        "500":
+          $ref: "./starmedica-components.yml#/components/responses/500"
+
+    delete:
+      tags:
+        - Documents
+      summary: Delete a document of a credentialed health professional
+      operationId: deleteDocument
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the document to delete
+          schema:
+            type: string
+      responses:
+        "204":
+          description: Document deleted successfully
+        "400":
+          $ref: "./starmedica-components.yml#/components/responses/400"
+        "401":
+          $ref: "./starmedica-components.yml#/components/responses/401"
+        "403":
+          $ref: "./starmedica-components.yml#/components/responses/403"
+        "404":
+          $ref: "./starmedica-components.yml#/components/responses/404"
+        "500":
+          $ref: "./starmedica-components.yml#/components/responses/500"
+  /health-professionals/{id}/shifts:
+    get:
+      tags:
+        - Shifts
+      summary: Get shifts for a credentialed health professional
+      description: Retrieves the shifts for a credentialed health professional. Optionally, the shifts can be filtered by status.
+      operationId: getShifts
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the credentialed health professional
+          schema:
+            type: string
+        - name: status
+          in: query
+          required: false
+          description: Filter shifts by status (optional)
+          schema:
+            type: string
+            enum: [pending, accepted, rejected]
+      responses:
+        "200":
+          description: List of shifts retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ShiftResponse"
+        "400":
+          $ref: "./starmedica-components.yml#/components/responses/400"
+        "401":
+          $ref: "./starmedica-components.yml#/components/responses/401"
+        "403":
+          $ref: "./starmedica-components.yml#/components/responses/403"
+        "404":
+          $ref: "./starmedica-components.yml#/components/responses/404"
+        "500":
+          $ref: "./starmedica-components.yml#/components/responses/500"
+  /shifts/{id}:
+    patch:
+      tags:
+        - Shifts
+      summary: Accept or reject an specific shift for a credentialed health professional
+      description: Updates the status and comments of a specific shift for a credentialed health professional.
+      operationId: updateShift
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the shift to update
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ShiftRequest"
+      responses:
+        "200":
+          description: Shift updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ShiftResponse"
+        "400":
+          $ref: "./starmedica-components.yml#/components/responses/400"
+        "401":
+          $ref: "./starmedica-components.yml#/components/responses/401"
+        "403":
+          $ref: "./starmedica-components.yml#/components/responses/403"
+        "404":
+          $ref: "./starmedica-components.yml#/components/responses/404"
+        "500":
+          $ref: "./starmedica-components.yml#/components/responses/500"
+  /health-professionals/{id}/patients:
+    get:
+      tags:
+        - Patients
+      summary: Get patients for a credentialed health professional
+      description: Retrieves the patients for a credentialed health professional. Optionally, the patients can be filtered by medical facility, name or last name.
+      operationId: getPatients
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the credentialed health professional
+          schema:
+            type: string
+        - name: medicalFacility
+          in: query
+          required: false
+          description: Filter patients by medical facility (optional)
+          schema:
+            type: string
+        - name: name
+          in: query
+          required: false
+          description: Filter patients by name (optional)
+          schema:
+            type: string
+        - name: lastName
+          in: query
+          required: false
+          description: Filter patients by last name (optional)
+          schema:
+            type: string
+      responses:
+        "200":
+          description: List of patients retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "./starmedica-components.yml#/components/schemas/Patient"
+        "400":
+          $ref: "./starmedica-components.yml#/components/responses/400"
+        "401":
+          $ref: "./starmedica-components.yml#/components/responses/401"
+        "403":
+          $ref: "./starmedica-components.yml#/components/responses/403"
+        "404":
+          $ref: "./starmedica-components.yml#/components/responses/404"
+        "500":
+          $ref: "./starmedica-components.yml#/components/responses/500"
+  /health-professionals/{id}/notifications:
+    get:
+      tags:
+        - Notifications
+      summary: Get notifications for a credentialed health professional
+      description: Retrieves the notifications for a credentialed health professional. Optionally, the notifications can be filtered by status or type.
+      operationId: getNotifications
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the credentialed health professional
+          schema:
+            type: string
+        - name: status
+          in: query
+          required: false
+          description: Filter notifications by status (optional)
+          schema:
+            type: string
+        - name: type
+          in: query
+          required: false
+          description: Filter notifications by type (optional)
+          schema:
+            type: string
+      responses:
+        "200":
+          description: List of notifications retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Notification"
+        "400":
+          $ref: "./starmedica-components.yml#/components/responses/400"
+        "401":
+          $ref: "./starmedica-components.yml#/components/responses/401"
+        "403":
+          $ref: "./starmedica-components.yml#/components/responses/403"
+        "404":
+          $ref: "./starmedica-components.yml#/components/responses/404"
+        "500":
+          $ref: "./starmedica-components.yml#/components/responses/500"
+  /health-professionals/{id}/productivity:
+    get:
+      tags:
+        - Productivity
+      summary: Get the stadistic information about the episodes of the health professional
+      description: Retrieves the patients for a credentialed health professional. Optionally, the patients can be filtered by medical facility, name or last name.
+      operationId: getProductivity
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the credentialed health professional
+          schema:
+            type: string
+      responses:
+        "200":
+          description: List of patients retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Productivity"
+        "400":
+          $ref: "./starmedica-components.yml#/components/responses/400"
+        "401":
+          $ref: "./starmedica-components.yml#/components/responses/401"
+        "403":
+          $ref: "./starmedica-components.yml#/components/responses/403"
+        "404":
+          $ref: "./starmedica-components.yml#/components/responses/404"
+        "500":
+          $ref: "./starmedica-components.yml#/components/responses/500"
+  /health-professionals/{id}/pre-discharges:
+    get:
+      tags:
+        - Pre-discharges
+      summary: Get all pre discharge entries for a specific health professional
+      operationId: getAllPreDischargesForHealthProfessional
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Unique identifier of the health professional
+          schema:
+            type: string
+      responses:
+        "200":
+          description: List of pre discharge entries retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "./starmedica-components.yml#/components/schemas/PreDischargeResponse"
+components:
+  schemas:
+    HealthProfessionalRequest:
+      type: object
+      properties:
+        startHospitalRequestId:
+          type: string
+          description: Star Médica hospital where the credentialing request was initiated
+          example: "23"
+          maxLength: 4
+        generalInformation:
+          $ref: "./starmedica-components.yml#/components/schemas/GeneralInformation"
+        contactInformation:
+          $ref: "./starmedica-components.yml#/components/schemas/ContactInformation"
+        address:
+          $ref: "./starmedica-components.yml#/components/schemas/Address"
+        clinic:
+          type: string
+          description: Clinic of the health professional
+          example: "B304"
+          maxLength: 24
+        profilePicture:
+          type: string
+          format: binary
+          description: File in a valid format (.png, .jpg, .jpeg)
+          example: "photo.png"
+        observations:
+          type: string
+          description: Observations about the health professional
+          example: "Es ayudante del Dr. Jiménez Huerta Ginecólogo..."
+          maxLength: 256
+    HealthProfessionalUpdate:
+      type: object
+      properties:
+        endHospitalRequestId:
+          type: string
+          description: Star Médica hospital where the credentialing request was finished
+          example: "23"
+          maxLength: 4
+        contactInformation:
+          $ref: "./starmedica-components.yml#/components/schemas/ContactInformation"
+        address:
+          $ref: "./starmedica-components.yml#/components/schemas/Address"
+        profilePicture:
+          type: string
+          format: binary
+          description: File in a valid format (.png, .jpg, .jpeg)
+          example: "photo.png"
+        observations:
+          type: string
+          description: Observations about the health professional
+          example: "Es ayudante del Dr. Jiménez Huerta Ginecólogo..."
+          maxLength: 256
+    HealthProfessionalResponse:
+      type: object
+      properties:
+        medicalFacilityId:
+          allOf:
+            - $ref: "./starmedica-components.yml#/components/schemas/MedicalFacility"
+          description: Star Médica hospital where the credentialing request was requested
+        generalInformation:
+          $ref: "./starmedica-components.yml#/components/schemas/GeneralInformation"
+        contactInformation:
+          $ref: "./starmedica-components.yml#/components/schemas/ContactInformation"
+        address:
+          $ref: "./starmedica-components.yml#/components/schemas/Address"
+        medicalId:
+          type: string
+          description: ID of the health professional registered in SAP
+          example: "110001413"
+        clinic:
+          type: string
+          description: Clinic of the health professional
+          example: "B304"
+        profilePictureUrl:
+          type: string
+          description: Picture URL
+          example: "http://www.starmedica.globant.com/medicos/2323/profile-pictures/photo.png"
+        credentialQRUrl:
+          type: string
+          description: QR URL of Professional credential
+          example: "http://www.starmedica.globant.com/medicos/2323/credential-qrs/qr.png"
+        observations:
+          type: string
+          description: Observations about the health professional
+          example: "Es ayudante del Dr. Jiménez Huerta Ginecólogo..."
+        status:
+          type: string
+          enum:
+            - requested
+            - approved
+          description: Observations about the health professional
+          example: "Es ayudante del Dr. Jiménez Huerta Ginecólogo..."
+    Degree:
+      type: object
+      properties:
+        degree:
+          type: object
+          properties:
+            name:
+              type: string
+              description: Name of the degree
+              example: "MEDICO CIRUJANO"
+              maxLength: 50
+            category:
+              type: string
+              enum:
+                - "Licenciatura"
+                - "Especialidad"
+                - "Subespecialidad"
+              description: Type of the degree
+              example: "Licenciatura"
+              maxLength: 50
+            number:
+              type: string
+              description: Number of the degree
+              example: "01927-R18"
+              maxLength: 20
+            expeditionDate:
+              type: string
+              description: Date of degree expedition
+              example: "31/08/2007"
+            expeditedBy:
+              type: string
+              description: Institution that granted the degree
+              example: "UNIVERSIDAD AUTONOMA CIUDAD JUAREZ"
+              maxLength: 80
+        professionalLicense:
+          type: object
+          properties:
+            number:
+              type: string
+              description: Number of the professional license
+              example: "5368330"
+              maxLength: 20
+            expeditionDate:
+              type: string
+              description: Date of professional license expedition
+              example: "14/12/2007"
+            expeditedBy:
+              type: string
+              description: Institution that granted the professional license
+              example: "SEP"
+              maxLength: 20
+        verification:
+          type: object
+          properties:
+            verifiedBy:
+              type: string
+              description: Name of the person who verified the degree
+              maxLength: 50
+              example: "ZULEMA TAFOYA"
+            city:
+              type: string
+              description: City where the verification took place
+              maxLength: 50
+              example: "JUAREZ"
+            type:
+              type: string
+              description: Type of original source verification
+              maxLength: 50
+              example: "VFO REGISTRO NAL PROFESIONISTAS"
+            verificationDate:
+              type: string
+              format: "date"
+              description: Date of the verification
+              example: "15/12/2014"
+    DocumentResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          description: ID of the document
+          example: "1"
+        type:
+          type: string
+          description: Type of the document
+          enum:
+            - "Identicación Oficial"
+            - "RFC"
+            - "CURP"
+            - "Comprobante de domicilio"
+            - "Carátula bancaria"
+            - "Póliza Seguro Vigente"
+            - "Solicitud de credencialización"
+            - "Aviso de privacidad"
+            - "Adicional"
+          example: "Identicación Oficial"
+        name:
+          type: string
+          description: Name of the document
+          example: "PASAPORTE"
+        expeditionDate:
+          type: string
+          description: Date of document expedition
+          example: "02/07/2014"
+        expeditedBy:
+          type: string
+          description: Entity that expedited the document
+          example: "Instituto Nacional Electoral"
+        expirationDate:
+          type: string
+          nullable: true
+          description: Expiration date of the document
+          example: "02/07/2024"
+        comments:
+          type: string
+          description: Additional information of the document
+          example: "Fecha de vencimiento cercana"
+        url:
+          type: string
+          description: Document URL
+          example: "http://www.starmedica.globant.com/medicos/2323/documents/234"
+    DocumentRequest:
+      type: object
+      properties:
+        type:
+          type: string
+          description: Type of the document
+          example: "Identicación Oficial"
+          maxLength: 50
+        name:
+          type: string
+          description: Name of the document
+          example: "INE"
+          maxLength: 50
+        expeditionDate:
+          type: string
+          description: Date of document expedition
+          example: "02/07/2014"
+        expeditedBy:
+          type: string
+          description: Entity that expedited the document
+          example: "Instituto Nacional Electoral"
+          maxLength: 50
+        expirationDate:
+          type: string
+          description: Expiration date of the document
+          example: "02/07/2024"
+        comments:
+          type: string
+          description: Additional information of the document
+          example: "Fecha de vencimiento cercana"
+          maxLength: 256
+        file:
+          type: string
+          format: binary
+          description: File in a valid format (.pdf, .png, .jpg, .jpeg)
+          example: "INE.pdf"
+    ShiftResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          description: ID of the shift
+          example: "2"
+        doctorId:
+          type: string
+          description: ID of the health professional
+          example: "322"
+        startDate:
+          type: string
+          format: "date"
+          description: Start date of the shift
+          example: "23/05/2024"
+        endDate:
+          type: string
+          format: "date"
+          description: End date of the shift
+          example: "23/07/2024"
+        status:
+          type: string
+          enum: [pending, accepted, rejected]
+          description: Status of the shift (pending, accepted, rejected)
+          example: "pending"
+        comments:
+          type: string
+          nullable: true
+          description: Additional comments for the shift
+          example: "Gracias!"
+    ShiftRequest:
+      type: object
+      required: [status]
+      properties:
+        status:
+          type: string
+          enum: [accepted, rejected]
+          description: Updated status of the shift
+        comments:
+          type: string
+          nullable: true
+          description: Updated comments for the shift
+    Productivity:
+      type: object
+      description: Get the data and metadata for render reports and charts
+      properties:
+        data:
+          type: object
+          description: Updated status of the shift
+        metadata:
+          type: object
+          description: Updated comments for the shift
+    # #########################################################
+    # #                   Notifications                      #
+    # #########################################################
+    Notification:
+      type: object
+      properties:
+        id:
+          type: string
+          description: ID of the notification
+          example: "110001413"
+        type:
+          type: string
+          enum: [productivity, shift, payment, episode]
+          description: Type of notification
+          example: "Productividad"
+        status:
+          type: string
+          enum: [new, read]
+          description: Status of the notification
+          example: "read"
+        title:
+          type: string
+          description: Title of notification
+          example: "¡Estás a un episodio de alcanzar tu objetivo!"
+        body:
+          type: string
+          description: Body text of the notification
+          example: "Estás a un paso de alcanzar tu meta, no bajes la guardia. Recuerda que tu esfuerzo será recompensado"
+          maxLength: 1
+        deeplink:
+          type: string
+          description: Deeplink to redirect into the app
+          example: "/notificationCenter/productivity/423"

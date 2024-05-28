@@ -1,0 +1,268 @@
+openapi: 3.0.0
+info:
+  title: Common components
+  version: 1.0.0
+paths: {}
+components:
+  schemas:
+    # #########################################################
+    # #                      Schemas                         #
+    # #########################################################
+    GeneralInformation:
+      type: object
+      description: User basic information
+      title: GeneralInformation
+      properties:
+        name:
+          type: string
+          description: Name of the user
+          example: "ERANDY SUSANA"
+          maxLength: 50
+        lastName:
+          type: string
+          description: Last name of the user
+          example: "ALMAZAN"
+          maxLength: 50
+        lastName2:
+          type: string
+          description: Second last name (Mother's last name) of the user
+          example: "SANCHEZ"
+          maxLength: 50
+        gender:
+          type: string
+          enum:
+            - "F"
+            - "M"
+            - "Other"
+          description: Gender of the user
+          example: "F"
+        birthday:
+          type: string
+          format: "date"
+          description: Birthday of the user
+          example: "15/01/1981"
+        nationality:
+          type: string
+          description: Nationality of the user
+          example: "Mexicana"
+    ContactInformation:
+      type: object
+      description: User contact information
+      title: ContactInformation
+      properties:
+        phone:
+          type: string
+          description: Phone number of the user
+          example: "6561678462"
+          maxLength: 10
+        cellphone:
+          type: string
+          description: Cellphone number of the user
+          example: "6561678090"
+          maxLength: 10
+        email:
+          type: string
+          description: Email of the user
+          example: "cuitla30@gmail.com"
+          maxLength: 100
+    Address:
+      type: object
+      description: Address of user
+      title: Address
+      properties:
+        street:
+          type: string
+          description: Street of the address
+          example: "CIRCUITO MONTESCO SUR #256 Int #23"
+          maxLength: 100
+        neighborhood:
+          type: string
+          description: Neighborhood of the address
+          example: "FRACC CANTO DE VERONA"
+          maxLength: 100
+        city:
+          type: string
+          description: City of the address
+          example: "Juárez"
+          maxLength: 50
+        municipality:
+          type: string
+          description: Minicipality of the address
+          example: "Juárez"
+          maxLength: 50
+        state:
+          type: string
+          description: State of the address
+          example: "Chihuahua"
+          maxLength: 50
+        postalCode:
+          type: string
+          description: Postal code of the address
+          example: "32540"
+          maxLength: 10
+    MedicalFacility:
+      type: object
+      title: MedicalFacility
+      description: Hospital
+      properties:
+        id:
+          type: string
+          maxLength: 4
+          description: ID of the mnedical facility
+          example: "3456"
+        name:
+          type: string
+          description: Name of the medical facility
+          maxLength: 100
+          example: "Lomas verdes"
+    Patient:
+      type: object
+      title: Patient
+      properties:
+        mpid:
+          type: string
+          description: Master patient ID
+          example: "110001413"
+        generalInformation:
+          $ref: "#/components/schemas/GeneralInformation"
+        contactInformation:
+          $ref: "#/components/schemas/ContactInformation"
+        address:
+          $ref: "#/components/schemas/Address"
+    Episode:
+      type: object
+      title: Episode
+      properties:
+        id:
+          type: string
+          description: ID of the episode
+          maxLength: 16
+          example: "88990001"
+        medicalId:
+          type: string
+          description: ID of the health professional registered in SAP
+          example: "110001413"
+        mpid:
+          type: string
+          description: Master patient ID
+          example: "110001413"
+        room:
+          type: string
+          description: Room of the patient
+          example: "D304"
+        diagnostic:
+          type: string
+          description: Diagnostic of the patient
+          example: "Contusión severa"
+        medicalFacility:
+          $ref: "#/components/schemas/MedicalFacility"
+        episodeStatus:
+          type: string
+          enum:
+            - open
+            - closed
+          description: Status of the episode (ABIERTO/CONCLUIDO)
+          maxLength: 16
+        startDate:
+          type: string
+          description: Start date of the episode YYYY-MM-DD
+          example: "2023-12-22"
+          maxLength: 10
+        startTime:
+          type: string
+          description: Start time of the episode HH:MM
+          example: "14:01"
+          maxLength: 5
+        endDate:
+          type: string
+          description: End date of the episode YYYY-MM-DD
+          example: "2023-12-22"
+          maxLength: 10
+        endTime:
+          type: string
+          description: End time of the episode HH:MM
+          example: "14:01"
+          maxLength: 5
+    PreDischargeResponse:
+      type: object
+      title: PreDischargeResponse
+      properties:
+        episode:
+          $ref: "#/components/schemas/Episode"
+        status:
+          type: string
+          enum: [sent, in_progress, ready]
+          description: Status of the pre discharge (sent, in progress, ready)
+          example: "sent"
+        comments:
+          type: string
+          nullable: true
+          description: Additional comments for the shift
+          example: "Gracias!"
+    Error:
+      type: object
+      title: Error
+      properties:
+        code:
+          type: string
+          description: Error code
+        message:
+          type: string
+          description: Error message
+        details:
+          type: string
+          description: Additional error details
+  responses:
+    # #########################################################
+    # #                     Responses                        #
+    # #########################################################
+    400:
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+          example:
+            code: 400
+            message: Recurso no encontrado
+            description: Additional error details
+    401:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+          example:
+            code: 401
+            message: Credenciales no válidas
+            description: Additional error details
+    403:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+          example:
+            code: 403
+            message: No tienes permiso para acceder a este recurso
+            description: Additional error details
+    404:
+      description: Not found
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+          example:
+            code: 404
+            message: Recurso no encontrado
+            description: Additional error details
+    500:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+          example:
+            code: 500
+            message: Error Interno
+            description: Additional error details
