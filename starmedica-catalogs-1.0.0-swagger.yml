@@ -121,7 +121,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/CatalogResponse"
+                $ref: "#/components/schemas/CatalogResponseWithStateId"
         "400":
           $ref: "./starmedica-components.yml#/components/responses/400"
         "401":
@@ -207,6 +207,29 @@ components:
           type: string
           description: Specialty related to the subspecialty
           example: "Cardiology"
+    CatalogItemWithStateId:
+      type: object
+      properties:
+        id:
+          type: string
+          description: ID of the catalog item
+          example: "1234"
+        name:
+          type: string
+          description: Name of the catalog item
+          example: "Catalog Item Name"
+        description:
+          type: string
+          description: Description of the catalog item
+          example: "Description of the catalog item"
+        availability:
+          type: boolean
+          description: Availability of the catalog item
+          example: true
+        stateId:
+          type: string
+          description: ID of the state
+          example: "5678"
     CatalogResponse:
       type: object
       properties:
@@ -223,4 +246,11 @@ components:
           description: List of catalog items with specialties
           items:
             $ref: "#/components/schemas/CatalogItemWithSpecialty"
-
+    CatalogResponseWithStateId:
+      type: object
+      properties:
+        items:
+          type: array
+          description: List of catalog items with state IDs
+          items:
+            $ref: "#/components/schemas/CatalogItemWithStateId"
