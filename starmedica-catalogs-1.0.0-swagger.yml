@@ -7,100 +7,36 @@ servers:
 info:
   description: API for Pre Discharges
   version: 1.0.0
-  title: Pre Discharges
+  title: Catalogs
   contact:
     email: diego.matus@globant.com
   license:
     name: Apache 2.0
     url: "http://www.apache.org/licenses/LICENSE-2.0.html"
 tags:
-  - name: Pre Discharges
-    description: Operations available to handle pre discharge information
+  - name: Catalogs
+    description: Operations available to handle catalog information
 paths:
-  /pre-discharges:
-    post:
-      tags:
-        - Pre Discharges
-      summary: Create a pre discharge entry
-      operationId: createPreDischarge
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/PreDischargeRequest"
-      responses:
-        "201":
-          description: Pre discharge entry created successfully
-          content:
-            application/json:
-              schema:
-                $ref: "./starmedica-components.yml#/components/schemas/PreDischargeResponse"
-        "400":
-          $ref: "./starmedica-components.yml#/components/responses/400"
-        "401":
-          $ref: "./starmedica-components.yml#/components/responses/401"
-        "403":
-          $ref: "./starmedica-components.yml#/components/responses/403"
-        "404":
-          $ref: "./starmedica-components.yml#/components/responses/404"
-        "500":
-          $ref: "./starmedica-components.yml#/components/responses/500"
-  /pre-discharges/{id}:
+  /catalogs/{id}:
     get:
       tags:
-        - Pre Discharges
-      summary: Get a pre discharge entry by ID
-      operationId: getPreDischarge
+        - Catalogs
+      summary: Get catalog information by ID
+      operationId: getCatalogById
       parameters:
         - name: id
           in: path
           required: true
-          description: ID of the pre discharge entry to retrieve
+          description: ID of the catalog entry to retrieve
           schema:
             type: string
       responses:
         "200":
-          description: Pre discharge entry retrieved successfully
+          description: Catalog entry retrieved successfully
           content:
             application/json:
               schema:
-                $ref: "./starmedica-components.yml#/components/schemas/PreDischargeResponse"
-        "400":
-          $ref: "./starmedica-components.yml#/components/responses/400"
-        "401":
-          $ref: "./starmedica-components.yml#/components/responses/401"
-        "403":
-          $ref: "./starmedica-components.yml#/components/responses/403"
-        "404":
-          $ref: "./starmedica-components.yml#/components/responses/404"
-        "500":
-          $ref: "./starmedica-components.yml#/components/responses/500"
-    patch:
-      tags:
-        - Pre Discharges
-      summary: Update a pre discharge entry by ID
-      operationId: updatePreDischarge
-      parameters:
-        - name: id
-          in: path
-          required: true
-          description: ID of the pre discharge entry to update
-          schema:
-            type: string
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/PreDischargeUpdate"
-      responses:
-        "200":
-          description: Pre discharge entry updated successfully
-          content:
-            application/json:
-              schema:
-                $ref: "./starmedica-components.yml#/components/schemas/PreDischargeResponse"
+                $ref: "#/components/schemas/CatalogResponse"
         "400":
           $ref: "./starmedica-components.yml#/components/responses/400"
         "401":
@@ -112,24 +48,41 @@ paths:
         "500":
           $ref: "./starmedica-components.yml#/components/responses/500"
 components:
-  schemas:
-    PreDischargeRequest:
+   schemas:
+    CatalogItem:
       type: object
       properties:
-        episodeId:
+        id:
           type: string
-          description: ID of episode for a patient
-          example: "4323"
-        comments:
+          description: ID of the catalog item
+          example: "1234"
+        name:
+          type: string
+          description: Name of the catalog item
+          example: "Catalog Item Name"
+        description:
+          type: string
+          description: Description of the catalog item
+          example: "Description of the catalog item"
+        category:
+          type: string
+          description: Category of the catalog item
+          example: "Category A" 
+        availability:
+          type: boolean
+          description: Availability of the catalog item
+          example: true
+        image:
           type: string
           nullable: true
-          description: Additional comments for the shift
-          example: "Gracias!"
-    PreDischargeUpdate:
+          description: URL of the catalog item image
+          example: "https://example.com/image.jpg"
+    CatalogResponse:
       type: object
       properties:
-        comments:
-          type: string
-          nullable: true
-          description: Additional comments for the shift
-          example: "Gracias!"
+        items:
+          type: array
+          description: List of catalog items
+          items:
+            $ref: "#/components/schemas/CatalogItem"
+
