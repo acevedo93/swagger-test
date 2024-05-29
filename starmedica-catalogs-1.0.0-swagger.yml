@@ -5,9 +5,9 @@ servers:
   - url: https://starmedica.globant.com/doctors/1.0.0
     description: Production dummy server (uses live data)
 info:
-  description: API for Pre Discharges
+  description: API for Catalogs
   version: 1.0.0
-  title: Catalogs
+  title: Star Médica API
   contact:
     email: diego.matus@globant.com
   license:
@@ -17,22 +17,130 @@ tags:
   - name: Catalogs
     description: Operations available to handle catalog information
 paths:
-  /catalogs/{id}:
+  /catalogs/specialties:
     get:
       tags:
         - Catalogs
-      summary: Get catalog information by ID
-      operationId: getCatalogById
-      parameters:
-        - name: id
-          in: path
-          required: true
-          description: ID of the catalog entry to retrieve
-          schema:
-            type: string
+      summary: Get list of Specialties
+      operationId: getSpecialties
       responses:
         "200":
-          description: Catalog entry retrieved successfully
+          description: List of Specialties retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CatalogResponse"
+        "400":
+          $ref: "./starmedica-components.yml#/components/responses/400"
+        "401":
+          $ref: "./starmedica-components.yml#/components/responses/401"
+        "403":
+          $ref: "./starmedica-components.yml#/components/responses/403"
+        "404":
+          $ref: "./starmedica-components.yml#/components/responses/404"
+        "500":
+          $ref: "./starmedica-components.yml#/components/responses/500"
+  /catalogs/subspecialties:
+    get:
+      tags:
+        - Catalogs
+      summary: Get list of Subspecialties
+      operationId: getSubspecialties
+      responses:
+        "200":
+          description: List of Subspecialties retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CatalogResponseWithSpecialty"
+        "400":
+          $ref: "./starmedica-components.yml#/components/responses/400"
+        "401":
+          $ref: "./starmedica-components.yml#/components/responses/401"
+        "403":
+          $ref: "./starmedica-components.yml#/components/responses/403"
+        "404":
+          $ref: "./starmedica-components.yml#/components/responses/404"
+        "500":
+          $ref: "./starmedica-components.yml#/components/responses/500"
+  /catalogs/insurers:
+    get:
+      tags:
+        - Catalogs
+      summary: Get list of Insurers
+      operationId: getInsurers
+      responses:
+        "200":
+          description: List of Insurers retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CatalogResponse"
+        "400":
+          $ref: "./starmedica-components.yml#/components/responses/400"
+        "401":
+          $ref: "./starmedica-components.yml#/components/responses/401"
+        "403":
+          $ref: "./starmedica-components.yml#/components/responses/403"
+        "404":
+          $ref: "./starmedica-components.yml#/components/responses/404"
+        "500":
+          $ref: "./starmedica-components.yml#/components/responses/500"
+  /catalogs/medical-facilities:
+    get:
+      tags:
+        - Catalogs
+      summary: Get list of Medical Facilities
+      operationId: getMedicalFacilities
+      responses:
+        "200":
+          description: List of Medical Facilities retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CatalogResponse"
+        "400":
+          $ref: "./starmedica-components.yml#/components/responses/400"
+        "401":
+          $ref: "./starmedica-components.yml#/components/responses/401"
+        "403":
+          $ref: "./starmedica-components.yml#/components/responses/403"
+        "404":
+          $ref: "./starmedica-components.yml#/components/responses/404"
+        "500":
+          $ref: "./starmedica-components.yml#/components/responses/500"
+  /catalogs/municipalities:
+    get:
+      tags:
+        - Catalogs
+      summary: Get list of Municipalities
+      operationId: getMunicipalities
+      responses:
+        "200":
+          description: List of Municipalities retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CatalogResponse"
+        "400":
+          $ref: "./starmedica-components.yml#/components/responses/400"
+        "401":
+          $ref: "./starmedica-components.yml#/components/responses/401"
+        "403":
+          $ref: "./starmedica-components.yml#/components/responses/403"
+        "404":
+          $ref: "./starmedica-components.yml#/components/responses/404"
+        "500":
+          $ref: "./starmedica-components.yml#/components/responses/500"
+  /catalogs/states:
+    get:
+      tags:
+        - Catalogs
+      summary: Get list of States
+      operationId: getStates
+      responses:
+        "200":
+          description: List of States retrieved successfully
           content:
             application/json:
               schema:
@@ -48,7 +156,7 @@ paths:
         "500":
           $ref: "./starmedica-components.yml#/components/responses/500"
 components:
-   schemas:
+  schemas:
     CatalogItem:
       type: object
       properties:
@@ -67,16 +175,38 @@ components:
         category:
           type: string
           description: Category of the catalog item
-          example: "Category A" 
+          example: "Category A"
         availability:
           type: boolean
           description: Availability of the catalog item
           example: true
-        image:
+    CatalogItemWithSpecialty:
+      type: object
+      properties:
+        id:
           type: string
-          nullable: true
-          description: URL of the catalog item image
-          example: "https://example.com/image.jpg"
+          description: ID of the catalog item
+          example: "1234"
+        name:
+          type: string
+          description: Name of the catalog item
+          example: "Catalog Item Name"
+        description:
+          type: string
+          description: Description of the catalog item
+          example: "Description of the catalog item"
+        category:
+          type: string
+          description: Category of the catalog item
+          example: "Category A"
+        availability:
+          type: boolean
+          description: Availability of the catalog item
+          example: true
+        specialty:
+          type: string
+          description: Specialty related to the subspecialty
+          example: "Cardiology"
     CatalogResponse:
       type: object
       properties:
@@ -85,4 +215,12 @@ components:
           description: List of catalog items
           items:
             $ref: "#/components/schemas/CatalogItem"
+    CatalogResponseWithSpecialty:
+      type: object
+      properties:
+        items:
+          type: array
+          description: List of catalog items with specialties
+          items:
+            $ref: "#/components/schemas/CatalogItemWithSpecialty"
 
