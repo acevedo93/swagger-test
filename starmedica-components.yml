@@ -8,6 +8,103 @@ components:
     # #########################################################
     # #                      Schemas                         #
     # #########################################################
+    Notification:
+      type: object
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+        status:
+          type: string
+        priority:
+          type: string
+        title:
+          type: string
+        body:
+          type: string
+        deeplink:
+          type: string
+      example:
+        id: "110001413"
+        type: "Productividad"
+        status: "read"
+        priority: "HIGH"
+        title: "¡Estás a un episodio de alcanzar tu objetivo!"
+        body: "Estás a un paso de alcanzar tu meta, no bajes la guardia!"
+        deeplink: "/notificationCenter/productivity/423"
+    NotificationResponse:
+      $ref: "#/components/schemas/Notification"
+    NotificationsResponse:
+      type: array
+      items:
+        $ref: "#/components/schemas/Notification"
+      example:
+        - id: "110001413"
+          type: "Productividad"
+          status: "read"
+          priority: "HIGH"
+          title: "¡Estás a un episodio de alcanzar tu objetivo!"
+          body: "Estás a un paso de alcanzar tu meta, no bajes la guardia!"
+          deeplink: "/notificationCenter/productivity/423"
+    NotificationType:
+      type: object
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+        status:
+          type: boolean
+      example:
+        id: "17"
+        type: "Productividad"
+        status: true
+    NotificationTypesResponse:
+      type: array
+      items:
+        $ref: "#/components/schemas/NotificationType"
+      example:
+        - id: "17"
+          type: "Productividad"
+          status: true
+    NotificationTypeStatusResponse:
+      $ref: "#/components/schemas/NotificationType"
+    CreateNotification:
+      type: object
+      properties:
+        type:
+          type: string
+        status:
+          type: string
+        priority:
+          type: string
+        title:
+          type: string
+        body:
+          type: string
+        deeplink:
+          type: string
+      example:
+        type: "Productividad"
+        status: "read"
+        priority: "HIGH"
+        title: "¡Estás a un episodio de alcanzar tu objetivo!"
+        body: "Estás a un paso de alcanzar tu meta, no bajes la guardia!"
+        deeplink: "/notificationCenter/productivity/423"
+    CreateNotificationTypeRequest:
+      type: object
+      properties:
+        type:
+          type: string
+        status:
+          type: string
+      required:
+        - type
+        - status
+      example:
+        type: "Productividad"
+        status: true
     GeneralInformation:
       type: object
       description: User basic information
@@ -87,7 +184,7 @@ components:
           maxLength: 50
         municipality:
           type: string
-          description: Minicipality of the address
+          description: Municipality of the address
           example: "Juárez"
           maxLength: 50
         state:
@@ -108,7 +205,7 @@ components:
         id:
           type: string
           maxLength: 4
-          description: ID of the mnedical facility
+          description: ID of the medical facility
           example: "3456"
         name:
           type: string
@@ -266,3 +363,4 @@ components:
             code: 500
             message: Error Interno
             description: Additional error details
+    
