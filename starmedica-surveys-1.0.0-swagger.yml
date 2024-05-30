@@ -17,46 +17,7 @@ tags:
   - name: Surveys
     description: Operations available to handle professional's surveys
 paths:
-  /api/v1/health-professionals/{id}/surveys:
-    get:
-      tags:
-        - Surveys
-      summary: Get surveys for a credentialed doctor
-      description: Retrieves the surveys associated with a credentialed doctor.
-      operationId: getHealthProfessionalSurveys
-      parameters:
-        - name: id
-          in: path
-          required: true
-          description: ID of the credentialed doctor
-          schema:
-            type: string
-        - name: status
-          in: query
-          required: false
-          description: Filter patients by medical facility (optional)
-          schema:
-            type: string
-          example: pending
-      responses:
-        "200":
-          description: An array of surveys retrieved successfully
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/Survey"
-        "400":
-          $ref: "./starmedica-components.yml#/components/responses/400"
-        "401":
-          $ref: "./starmedica-components.yml#/components/responses/401"
-        "403":
-          $ref: "./starmedica-components.yml#/components/responses/403"
-        "404":
-          $ref: "./starmedica-components.yml#/components/responses/404"
-        "500":
-          $ref: "./starmedica-components.yml#/components/responses/500"
+  
   /api/v1/health-professionals/{id}/surveys/{sId}:
     get:
       tags:
@@ -90,7 +51,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Survey"
+                $ref:  "./starmedica-components.yml#/components/schemas/Survey"
         "400":
           $ref: "./starmedica-components.yml#/components/responses/400"
         "401":
@@ -125,7 +86,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/SurveyResponse"
+              $ref:  "./starmedica-components.yml#/components/schemas/SurveyResponse"
       responses:
         "201":
           description: Survey response submitted successfully
@@ -164,14 +125,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/SurveyEventRequest"
+              $ref:  "./starmedica-components.yml#/components/schemas/SurveyEventRequest"
       responses:
         "201":
           description: Response success
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/SurveyEventResponse"
+                $ref: "./starmedica-components.yml#/components/schemas/SurveyEventResponse"
         "400":
           $ref: "./starmedica-components.yml#/components/responses/400"
         "401":
