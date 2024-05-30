@@ -17,114 +17,69 @@ tags:
   - name: Productivity
     description: Operations available to handle productivity information
 paths:
-  /productivity/{id}:
+  /productivity/{id}/historical:
     get:
       tags:
         - Productivity
-      summary: Gets a patient
-      operationId: getPatient
+      summary: Gets historical performance
+      operationId: getHistoricalPerformance
       description: |
-        By passing in the appropriate options, you can search for
-        available inventory in the system
+        Retrieves current performance, historical average, and monthly data for a doctor
       parameters:
         - name: id
           in: path
           required: true
-          description: Patient id
+          description: Doctor id
           schema:
             type: string
       responses:
         "200":
-          description: Patient retrieved successfully
+          description: Historical performance and monthly data retrieved successfully
           content:
             application/json:
               schema:
-                $ref: "./starmedica-components.yml#/components/schemas/Patient"
-        "400":
-          $ref: "./starmedica-components.yml#/components/responses/400"
-        "401":
-          $ref: "./starmedica-components.yml#/components/responses/401"
-        "403":
-          $ref: "./starmedica-components.yml#/components/responses/403"
-        "404":
-          $ref: "./starmedica-components.yml#/components/responses/404"
-        "500":
-          $ref: "./starmedica-components.yml#/components/responses/500"
-  /productivity/{id}/episodes:
-    get:
-      tags:
-        - Episodes
-      summary: Gets a productivity episodes
-      operationId: getPatientEpisodes
-      description: |
-        By passing in the appropriate options, you can search for
-        available inventory in the system
-      parameters:
-        - name: id
-          in: path
-          required: true
-          description: Patient id
-          schema:
-            type: string
-      responses:
-        "200":
-          description: Patient episodes retrieved successfully
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "./starmedica-components.yml#/components/schemas/Episode"
-        "400":
-          $ref: "./starmedica-components.yml#/components/responses/400"
-        "401":
-          $ref: "./starmedica-components.yml#/components/responses/401"
-        "403":
-          $ref: "./starmedica-components.yml#/components/responses/403"
-        "404":
-          $ref: "./starmedica-components.yml#/components/responses/404"
-        "500":
-          $ref: "./starmedica-components.yml#/components/responses/500"
-  /productivity/{id}/episodes/{episodeId}/studies:
-    get:
-      tags:
-        - Studies
-      summary: Gets a productivity episode studies
-      operationId: getPatientEpisodesStudies
-      description: |
-        By passing in the appropriate options, you can search for
-        available inventory in the system
-      parameters:
-        - name: id
-          in: path
-          required: true
-          description: Patient Id
-          schema:
-            type: string
-        - name: episodeId
-          in: path
-          required: true
-          description: Patient Episode Id
-          schema:
-            type: string
-        - name: type
-          in: query
-          required: true
-          description: Type of study lab or imaging (L/I)
-          schema:
-            type: string
-            description: Type of study lab or imaging (L/I)
-            maxLength: 1
-            example: "L"
-      responses:
-        "200":
-          description: Patient episodes retrieved successfully
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/Study"
+                type: object
+                properties:
+                  performance:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        category:
+                          type: string
+                        currentPerformance:
+                          type: string
+                          example: "20%"
+                        historicalAverage:
+                          type: number
+                          example: 200
+                        trend:
+                          type: string
+                          enum: ["up", "down", "neutral"]
+                          example: "up"
+                  monthlyData:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        month:
+                          type: string
+                        admissions:
+                          type: number
+                        surgeries:
+                          type: number
+                        procedures:
+                          type: number
+                        imagingStudies:
+                          type: number
+                        labStudies:
+                          type: number
+                        uti:
+                          type: number
+                        uci:
+                          type: number
+                        emergencies:
+                          type: number
         "400":
           $ref: "./starmedica-components.yml#/components/responses/400"
         "401":
@@ -138,6 +93,17 @@ paths:
 
 components:
   schemas:
+    Episode:
+      type: object
+      properties:
+        id:
+          type: string
+        date:
+          type: string
+        type:
+          type: string
+        description:
+          type: string
     Study:
       type: object
       properties:
