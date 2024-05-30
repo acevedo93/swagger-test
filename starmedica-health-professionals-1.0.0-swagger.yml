@@ -739,80 +739,55 @@ components:
             - approved
           description: Observations about the health professional
           example: "Es ayudante del Dr. Jiménez Huerta Ginecólogo..."
+        degrees:
+          type: array
+          items:
+            $ref: "#/components/schemas/Degree"
     Degree:
       type: object
       properties:
-        degree:
-          type: object
-          properties:
-            name:
-              type: string
-              description: Name of the degree
-              example: "MEDICO CIRUJANO"
-              maxLength: 50
-            category:
-              type: string
-              enum:
-                - "Licenciatura"
-                - "Especialidad"
-                - "Subespecialidad"
-              description: Type of the degree
-              example: "Licenciatura"
-              maxLength: 50
-            number:
-              type: string
-              description: Number of the degree
-              example: "01927-R18"
-              maxLength: 20
-            expeditionDate:
-              type: string
-              description: Date of degree expedition
-              example: "31/08/2007"
-            expeditedBy:
-              type: string
-              description: Institution that granted the degree
-              example: "UNIVERSIDAD AUTONOMA CIUDAD JUAREZ"
-              maxLength: 80
-        professionalLicense:
-          type: object
-          properties:
-            number:
-              type: string
-              description: Number of the professional license
-              example: "5368330"
-              maxLength: 20
-            expeditionDate:
-              type: string
-              description: Date of professional license expedition
-              example: "14/12/2007"
-            expeditedBy:
-              type: string
-              description: Institution that granted the professional license
-              example: "SEP"
-              maxLength: 20
-        verification:
-          type: object
-          properties:
-            verifiedBy:
-              type: string
-              description: Name of the person who verified the degree
-              maxLength: 50
-              example: "ZULEMA TAFOYA"
-            city:
-              type: string
-              description: City where the verification took place
-              maxLength: 50
-              example: "JUAREZ"
-            type:
-              type: string
-              description: Type of original source verification
-              maxLength: 50
-              example: "VFO REGISTRO NAL PROFESIONISTAS"
-            verificationDate:
-              type: string
-              format: "date"
-              description: Date of the verification
-              example: "15/12/2014"
+        name:
+          type: string
+          description: Name of the degree
+          example: "MEDICO CIRUJANO"
+          maxLength: 50
+        category:
+          type: string
+          enum:
+            - "Licenciatura"
+            - "Especialidad"
+            - "Subespecialidad"
+          description: Type of the degree
+          example: "Licenciatura"
+          maxLength: 50
+        number:
+          type: string
+          description: Number of the degree
+          example: "01927-R18"
+          maxLength: 20
+        expeditionDate:
+          type: string
+          description: Date of degree expedition
+          example: "31/08/2007"
+        expeditedBy:
+          type: string
+          description: Institution that granted the degree
+          example: "UNIVERSIDAD AUTONOMA CIUDAD JUAREZ"
+          maxLength: 80
+        professionalLicenseNumber:
+          type: string
+          description: Number of the professional license
+          example: "5368330"
+          maxLength: 20
+        professionalLicenseExpeditionDate:
+          type: string
+          description: Date of professional license expedition
+          example: "14/12/2007"
+        professionalLicenseExpeditedBy:
+          type: string
+          description: Institution that granted the professional license
+          example: "SEP"
+          maxLength: 20
     DocumentResponse:
       type: object
       properties:
