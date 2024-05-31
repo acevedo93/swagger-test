@@ -5,7 +5,7 @@ servers:
   - url: https://starmedica.globant.com/doctors/1.0.0
     description: Production dummy server (uses live data)
 info:
-  description: API for Zorder
+  description: API for Transactions
   version: 1.0.0
   title: Transactions
   contact:
