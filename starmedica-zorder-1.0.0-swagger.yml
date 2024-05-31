@@ -1,196 +1,588 @@
 openapi: 3.0.0
 servers:
-  - url: https://starmedica-sandbox.globant.com/patients/1.0.0
+  - url: https://starmedica-sandbox.globant.com/doctors/1.0.0
     description: Sandbox dummy server (uses test data)
-  - url: https://starmedica.globant.com/patients/1.0.0
+  - url: https://starmedica.globant.com/doctors/1.0.0
     description: Production dummy server (uses live data)
 info:
-  description: API for Patients
-  version: "1.0.0"
-  title: Patients
+  description: API for Zorder
+  version: 1.0.0
+  title: Zorder
   contact:
-    email: you@your-company.com
+    email: diego.matus@globant.com
   license:
     name: Apache 2.0
     url: "http://www.apache.org/licenses/LICENSE-2.0.html"
 tags:
-  - name: Patients
-    description: Operations available to handle patients information
-  - name: Episodes
-    description: Operations available to handle patient's episodes
-  - name: Studies
-    description: Operations available to handle episode's estudies
+  - name: Study Order Master
+    description: Operations available to handle professional's information
 paths:
-  /patients/{id}:
-    get:
+  /api/v1/study-order-masters:
+    post:
       tags:
-        - Patients
-      summary: Gets a patient
-      operationId: getPatient
-      description: |
-        By passing in the appropriate options, you can search for
-        available inventory in the system
-      parameters:
-        - name: id
-          in: path
-          required: true
-          description: Patient id
-          schema:
-            type: string
+        - Study Order Master
+      summary: Create a new study order master record
+      description: Creates a new study order master record in the system.
+      operationId: createStudyOrderMaster
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/StudyOrderMasterRequest"
       responses:
-        "200":
-          description: Patient retrieved successfully
+        "201":
+          description: Study order master record created successfully
           content:
             application/json:
               schema:
-                $ref: "./starmedica-components.yml#/components/schemas/Patient"
+                $ref: "#/components/schemas/StudyOrderMasterResponse"
         "400":
-          $ref: "./starmedica-components.yml#/components/responses/400"
+          $ref: "https://api.swaggerhub.com/domains/Star-Medica/starmedica-schemas/1.0.0#/components/responses/400"
         "401":
-          $ref: "./starmedica-components.yml#/components/responses/401"
+          $ref: "https://api.swaggerhub.com/domains/Star-Medica/starmedica-schemas/1.0.0#/components/responses/401"
         "403":
-          $ref: "./starmedica-components.yml#/components/responses/403"
+          $ref: "https://api.swaggerhub.com/domains/Star-Medica/starmedica-schemas/1.0.0#/components/responses/403"
         "404":
-          $ref: "./starmedica-components.yml#/components/responses/404"
+          $ref: "https://api.swaggerhub.com/domains/Star-Medica/starmedica-schemas/1.0.0#/components/responses/404"
         "500":
-          $ref: "./starmedica-components.yml#/components/responses/500"
-  /patients/{id}/episodes:
+          $ref: "https://api.swaggerhub.com/domains/Star-Medica/starmedica-schemas/1.0.0#/components/responses/500"
     get:
       tags:
-        - Episodes
-      summary: Gets a patients episodes
-      operationId: getPatientEpisodes
-      description: |
-        By passing in the appropriate options, you can search for
-        available inventory in the system
-      parameters:
-        - name: id
-          in: path
-          required: true
-          description: Patient id
-          schema:
-            type: string
+        - Study Order Master
+      summary: Get all study order master records
+      description: Retrieves a list of all study order master records.
+      operationId: getAllStudyOrderMasters
       responses:
         "200":
-          description: Patient episodes retrieved successfully
+          description: List of study order master records retrieved successfully
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: "./starmedica-components.yml#/components/schemas/Episode"
+                  $ref: "#/components/schemas/StudyOrderMasterResponse"
         "400":
-          $ref: "./starmedica-components.yml#/components/responses/400"
+          $ref: "https://api.swaggerhub.com/domains/Star-Medica/starmedica-schemas/1.0.0#/components/responses/400"
         "401":
-          $ref: "./starmedica-components.yml#/components/responses/401"
+          $ref: "https://api.swaggerhub.com/domains/Star-Medica/starmedica-schemas/1.0.0#/components/responses/401"
         "403":
-          $ref: "./starmedica-components.yml#/components/responses/403"
+          $ref: "https://api.swaggerhub.com/domains/Star-Medica/starmedica-schemas/1.0.0#/components/responses/403"
         "404":
-          $ref: "./starmedica-components.yml#/components/responses/404"
+          $ref: "https://api.swaggerhub.com/domains/Star-Medica/starmedica-schemas/1.0.0#/components/responses/404"
         "500":
-          $ref: "./starmedica-components.yml#/components/responses/500"
-  /patients/{id}/episodes/{episodeId}/studies:
+          $ref: "https://api.swaggerhub.com/domains/Star-Medica/starmedica-schemas/1.0.0#/components/responses/500"
+  /api/v1/study-order-masters/{masterOid}:
     get:
       tags:
-        - Studies
-      summary: Gets a patients episode studies
-      operationId: getPatientEpisodesStudies
-      description: |
-        By passing in the appropriate options, you can search for
-        available inventory in the system
+        - Study Order Master
+      summary: Get a study order master record
+      description: Retrieves a specific study order master record by its Master Order Id.
+      operationId: getStudyOrderMaster
       parameters:
-        - name: id
+        - name: masterOid
           in: path
           required: true
-          description: Patient Id
+          description: Master Order Id of the study order master record
           schema:
             type: string
-        - name: episodeId
-          in: path
-          required: true
-          description: Patient Episode Id
-          schema:
-            type: string
-        - name: type
-          in: query
-          required: true
-          description: Type of study lab or imaging (L/I)
-          schema:
-            type: string
-            description: Type of study lab or imaging (L/I)
-            maxLength: 1
-            example: "L"
       responses:
         "200":
-          description: Patient episodes retrieved successfully
+          description: Study order master record retrieved successfully
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/Study"
-        "400":
-          $ref: "./starmedica-components.yml#/components/responses/400"
-        "401":
-          $ref: "./starmedica-components.yml#/components/responses/401"
-        "403":
-          $ref: "./starmedica-components.yml#/components/responses/403"
-        "404":
-          $ref: "./starmedica-components.yml#/components/responses/404"
-        "500":
-          $ref: "./starmedica-components.yml#/components/responses/500"
+                $ref: "#/components/schemas/StudyOrderMasterResponse"
 
+    patch:
+      tags:
+        - Study Order Master
+      summary: Update a study order master record
+      description: Updates a specific study order master record by its Master Order Id.
+      operationId: updateStudyOrderMaster
+      parameters:
+        - name: masterOid
+          in: path
+          required: true
+          description: Master Order Id of the study order master record
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/StudyOrderMasterRequest"
+      responses:
+        "200":
+          description: Study order master record updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StudyOrderMasterResponse"
+    delete:
+      tags:
+        - Study Order Master
+      summary: Delete a study order master record
+      description: Deletes a specific study order master record by its Master Order Id.
+      operationId: deleteStudyOrderMaster
+      parameters:
+        - name: masterOid
+          in: path
+          required: true
+          description: Master Order Id of the study order master record
+          schema:
+            type: string
+      responses:
+        "204":
+          description: Study order master record deleted successfully
 components:
   schemas:
-    Study:
+    StudyOrderMasterRequest:
       type: object
       properties:
-        benefitId:
+        MANDT:
           type: string
-          maxLength: 10
-          description: ID of the benefit (prestacion)
-        benefitName:
-          type: string
-          maxLength: 100
-          description: Name of the benefit
-        subscriptor:
-          type: string
-          maxLength: 100
-          description: Subscriptor
-        subscription:
-          type: string
-          maxLength: 100
-          description: Subscription
-        category:
+          maxLength: 3
+          description: Mandante
+        MASTER_OID:
           type: string
           maxLength: 20
-          description: Category of the study
-        subcategory:
+          description: Master Order Id
+        EINRI:
           type: string
-          maxLength: 20
-          description: Subcategory of the study
-        startDate:
+          maxLength: 4
+          description: Centro sanitario
+        FALNR:
           type: string
-          description: Start date of the benefit YYYY-MM-DD (IBGDT)
-          example: "2023-12-22"
           maxLength: 10
-        startTime:
+          description: Número de episodio
+        PATNR:
           type: string
-          description: Start time of the benefit HH:MM (IBZT)
-          example: "14:01"
+          maxLength: 10
+          description: Número de paciente
+        LEIST:
+          type: string
+          maxLength: 10
+          description: Prestación dentro de un catálogo de prestaciones
+        LNRLS:
+          type: string
+          maxLength: 10
+          description: Número actual de la prestación
+        LFDBEW:
+          type: string
           maxLength: 5
-        resultStatus:
+          description: Número actual de un movimiento
+        IBGDT:
+          type: string
+          format: date
+          description: Fecha de inicio de la prestación
+        IBZT:
+          type: string
+          format: time
+          description: Hora de inicio de realización de la prestación
+        MASTER_PID:
+          type: string
+          maxLength: 20
+          description: Master Patient Id
+        VANR:
+          type: string
+          maxLength: 10
+          description: Número de mensaje de envío
+        IMENG:
+          type: string
+          maxLength: 4
+          description: Cantidad de prestaciones
+        ANFOE:
+          type: string
+          maxLength: 8
+          description: Unidad orgánica médica que solicita la prestación
+        ERBOE:
+          type: string
+          maxLength: 8
+          description: ID de unidad organizativa que realiza la prestación
+        ESTADO_RES:
           type: string
           maxLength: 2
-          description: Status of the result (ESTADO_RES)
-          example: "A"
-        resURL:
+          description: Estado resultado
+        URL_RES:
           type: string
-          maxLength: 400
-          example: "http://172.31.2.72:8080/launch?&AccessionNumber=-24-24-24l4aZFSJ11qYlipe2RyXqzCtSOWoaS5B6CUEkF4-2BDKKM-3D&action=viewaccession&e"
-          description: URL of the result of this study
-        intURL:
+          format: uri
+          description: Link de los resultados en PDF
+        URL_INT:
           type: string
-          maxLength: 400
-          example: "http://172.31.2.72:8080/launch?&AccessionNumber=-24-24-24l4aZFSJ11qYlipe2RyXqzCtSOWoaS5B6CUEkF4-2BDKKM-3D&action=viewaccession&e"
-          description: URL of the interpretation of this study
+          format: uri
+          description: Link de las interpretaciones en PDF
+        USNAM:
+          type: string
+          maxLength: 12
+          description: Nombre del usuario
+        ERDAT:
+          type: string
+          format: date
+          description: Fecha de creación del registro
+        ERTIM:
+          type: string
+          format: time
+          description: Hora de creación del registro
+        ERDATM:
+          type: string
+          format: date
+          description: Fecha de modificación del registro
+        ERTIMM:
+          type: string
+          format: time
+          description: Hora de modificación del registro
+        ERDATF:
+          type: string
+          format: date
+          description: Fecha de finalización del registro
+        ERTIMF:
+          type: string
+          format: time
+          description: Hora de finalización del registro
+        ERDATC:
+          type: string
+          format: date
+          description: Fecha de cancelación del registro
+        ERTIMC:
+          type: string
+          format: time
+          description: Hora de cancelación del registro
+        BARNR:
+          type: string
+          maxLength: 10
+          description: Número de personal del médico de tratamiento
+        BANAM:
+          type: string
+          maxLength: 70
+          description: Nombre y apellidos del médico
+        MAIL_ME:
+          type: string
+          maxLength: 132
+          format: email
+          description: Dirección de correo electrónico del médico
+        PNAME:
+          type: string
+          maxLength: 70
+          description: Nombre y apellidos del paciente
+        MAIL_PA:
+          type: string
+          maxLength: 132
+          format: email
+          description: Dirección de correo electrónico del paciente
+        FECHA_EM:
+          type: string
+          format: date
+          description: Última fecha de envío
+        HORA_EM:
+          type: string
+          format: time
+          description: Hora del envío del mensaje
+        UNAME_EM:
+          type: string
+          maxLength: 12
+          description: Usuario que realizó el envío
+        FECHA_EP:
+          type: string
+          format: date
+          description: Última fecha de envío de interpretaciones
+        HORA_EP:
+          type: string
+          format: time
+          description: Hora del envío de interpretaciones
+        UNAME_EP:
+          type: string
+          maxLength: 12
+          description: Usuario que realizó el envío de interpretaciones
+        STATUS_EM:
+          type: string
+          maxLength: 1
+          description: Estatus de envío de correo electrónico con resultados
+        STATUS_EP:
+          type: string
+          maxLength: 1
+          description: Estatus de envío de correo electrónico con interpretaciones
+        MAIL_ENV_ME:
+          type: string
+          maxLength: 132
+          format: email
+          description: Dirección de correo para envío de resultados al médico
+        MAIL_ENV_PA:
+          type: string
+          maxLength: 132
+          format: email
+          description: Dirección de correo para envío de interpretaciones al paciente
+        ESTADO_A_SF:
+          type: string
+          maxLength: 1
+          description: Estado de envío a Salesforce
+        FECHA_A_SF:
+          type: string
+          format: date
+          description: Fecha de envío a Salesforce
+        HORA_A_SF:
+          type: string
+          format: time
+          description: Hora de envío a Salesforce
+        FOLIO_SF_SAP:
+          type: string
+          maxLength: 20
+          description: Folio de respuesta de Salesforce al enviar
+        FECHA_REC_SF:
+          type: string
+          format: date
+          description: Fecha de recepción de la respuesta de Salesforce
+        HORA_REC_SF:
+          type: string
+          format: time
+          description: Hora de recepción de la respuesta de Salesforce
+        MENSAJE_WS:
+          type: string
+          description: Mensaje de respuesta del WS de Salesforce
+        NO_SUSC:
+          type: string
+          description: Número de suscripción (membresía)
+        URL_RES_ORGNL:
+          type: string
+          format: uri
+          description: Link original de los resultados en PDF
+        URL_INT_ORGNL:
+          type: string
+          format: uri
+          description: Link original de las interpretaciones en PDF
+        ID_USUARIO_MEDICO:
+          type: string
+          maxLength: 10
+          description: Identificador del médico
+        NOMBRE_MEDICO:
+          type: string
+          maxLength: 70
+          description: Nombre del médico
+      required:
+        - MANDT
+        - MASTER_OID
+    StudyOrderMasterResponse:
+      type: object
+      properties:
+        MANDT:
+          type: string
+          maxLength: 3
+          description: Mandante
+        MASTER_OID:
+          type: string
+          maxLength: 20
+          description: Master Order Id
+        EINRI:
+          type: string
+          maxLength: 4
+          description: Centro sanitario
+        FALNR:
+          type: string
+          maxLength: 10
+          description: Número de episodio
+        PATNR:
+          type: string
+          maxLength: 10
+          description: Número de paciente
+        LEIST:
+          type: string
+          maxLength: 10
+          description: Prestación dentro de un catálogo de prestaciones
+        LNRLS:
+          type: string
+          maxLength: 10
+          description: Número actual de la prestación
+        LFDBEW:
+          type: string
+          maxLength: 5
+          description: Número actual de un movimiento
+        IBGDT:
+          type: string
+          format: date
+          description: Fecha de inicio de la prestación
+        IBZT:
+          type: string
+          format: time
+          description: Hora de inicio de realización de la prestación
+        MASTER_PID:
+          type: string
+          maxLength: 20
+          description: Master Patient Id
+        VANR:
+          type: string
+          maxLength: 10
+          description: Número de mensaje de envío
+        IMENG:
+          type: string
+          maxLength: 4
+          description: Cantidad de prestaciones
+        ANFOE:
+          type: string
+          maxLength: 8
+          description: Unidad orgánica médica que solicita la prestación
+        ERBOE:
+          type: string
+          maxLength: 8
+          description: ID de unidad organizativa que realiza la prestación
+        ESTADO_RES:
+          type: string
+          maxLength: 2
+          description: Estado resultado
+        URL_RES:
+          type: string
+          format: uri
+          description: Link de los resultados en PDF
+        URL_INT:
+          type: string
+          format: uri
+          description: Link de las interpretaciones en PDF
+        USNAM:
+          type: string
+          maxLength: 12
+          description: Nombre del usuario
+        ERDAT:
+          type: string
+          format: date
+          description: Fecha de creación del registro
+        ERTIM:
+          type: string
+          format: time
+          description: Hora de creación del registro
+        ERDATM:
+          type: string
+          format: date
+          description: Fecha de modificación del registro
+        ERTIMM:
+          type: string
+          format: time
+          description: Hora de modificación del registro
+        ERDATF:
+          type: string
+          format: date
+          description: Fecha de finalización del registro
+        ERTIMF:
+          type: string
+          format: time
+          description: Hora de finalización del registro
+        ERDATC:
+          type: string
+          format: date
+          description: Fecha de cancelación del registro
+        ERTIMC:
+          type: string
+          format: time
+          description: Hora de cancelación del registro
+        BARNR:
+          type: string
+          maxLength: 10
+          description: Número de personal del médico de tratamiento
+        BANAM:
+          type: string
+          maxLength: 70
+          description: Nombre y apellidos del médico
+        MAIL_ME:
+          type: string
+          maxLength: 132
+          format: email
+          description: Dirección de correo electrónico del médico
+        PNAME:
+          type: string
+          maxLength: 70
+          description: Nombre y apellidos del paciente
+        MAIL_PA:
+          type: string
+          maxLength: 132
+          format: email
+          description: Dirección de correo electrónico del paciente
+        FECHA_EM:
+          type: string
+          format: date
+          description: Última fecha de envío
+        HORA_EM:
+          type: string
+          format: time
+          description: Hora del envío del mensaje
+        UNAME_EM:
+          type: string
+          maxLength: 12
+          description: Usuario que realizó el envío
+        FECHA_EP:
+          type: string
+          format: date
+          description: Última fecha de envío de interpretaciones
+        HORA_EP:
+          type: string
+          format: time
+          description: Hora del envío de interpretaciones
+        UNAME_EP:
+          type: string
+          maxLength: 12
+          description: Usuario que realizó el envío de interpretaciones
+        STATUS_EM:
+          type: string
+          maxLength: 1
+          description: Estatus de envío de correo electrónico con resultados
+        STATUS_EP:
+          type: string
+          maxLength: 1
+          description: Estatus de envío de correo electrónico con interpretaciones
+        MAIL_ENV_ME:
+          type: string
+          maxLength: 132
+          format: email
+          description: Dirección de correo para envío de resultados al médico
+        MAIL_ENV_PA:
+          type: string
+          maxLength: 132
+          format: email
+          description: Dirección de correo para envío de interpretaciones al paciente
+        ESTADO_A_SF:
+          type: string
+          maxLength: 1
+          description: Estado de envío a Salesforce
+        FECHA_A_SF:
+          type: string
+          format: date
+          description: Fecha de envío a Salesforce
+        HORA_A_SF:
+          type: string
+          format: time
+          description: Hora de envío a Salesforce
+        FOLIO_SF_SAP:
+          type: string
+          maxLength: 20
+          description: Folio de respuesta de Salesforce al enviar
+        FECHA_REC_SF:
+          type: string
+          format: date
+          description: Fecha de recepción de la respuesta de Salesforce
+        HORA_REC_SF:
+          type: string
+          format: time
+          description: Hora de recepción de la respuesta de Salesforce
+        MENSAJE_WS:
+          type: string
+          description: Mensaje de respuesta del WS de Salesforce
+        NO_SUSC:
+          type: string
+          description: Número de suscripción (membresía)
+        URL_RES_ORGNL:
+          type: string
+          format: uri
+          description: Link original de los resultados en PDF
+        URL_INT_ORGNL:
+          type: string
+          format: uri
+          description: Link original de las interpretaciones en PDF
+        ID_USUARIO_MEDICO:
+          type: string
+          maxLength: 10
+          description: Identificador del médico
+        NOMBRE_MEDICO:
+          type: string
+          maxLength: 70
+          description: Nombre del médico
+      required:
+        - MANDT
+        - MASTER_OID

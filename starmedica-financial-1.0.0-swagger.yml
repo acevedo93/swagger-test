@@ -7,20 +7,20 @@ servers:
 info:
   description: API for Zorder
   version: 1.0.0
-  title: Financial
+  title: Transactions
   contact:
     email: diego.matus@globant.com
   license:
     name: Apache 2.0
     url: "http://www.apache.org/licenses/LICENSE-2.0.html"
 tags:
-  - name: Finances
+  - name: Transactions
     description: Operations available to handle professional's information
 paths:
-  /api/v1/finances:
+  /transactions:
     post:
       tags:
-        - Finances
+        - Transactions
       summary: Register a health professional in the finances system
       description: Registers a health professional in the finances system to manage payments.
       operationId: registerHealthProfessionalInFinances
@@ -43,81 +43,15 @@ paths:
           $ref: "./starmedica-components.yml#/components/responses/404"
         "500":
           $ref: "./starmedica-components.yml#/components/responses/500"
-  /api/v1/health-professional/{healthProfessionalId}/finances/transactions:
+  /health-professional/{id}/details:
     get:
       tags:
-        - Finances
-      summary: Get all finance transactions for a health professional
-      description: Retrieves a list of all finance transactions for a specific health professional.
-      operationId: getAllFinanceTransactionsForHealthProfessional
-      parameters:
-        - name: healthProfessionalId
-          in: path
-          required: true
-          description: Unique identifier of the health professional
-          schema:
-            type: string
-        - name: status
-          in: query
-          required: false
-          description: Filter transactions by status (paid or pending)
-          schema:
-            type: string
-            enum:
-              - paid
-              - pending
-        - name: dateFilter
-          in: query
-          required: false
-          description: Filter transactions by predefined date ranges
-          schema:
-            type: string
-            enum:
-              - last_24_hours
-              - last_7_days
-              - last_month
-        - name: startDate
-          in: query
-          required: false
-          description: Start date for the date range filter
-          schema:
-            type: string
-            format: date
-        - name: endDate
-          in: query
-          required: false
-          description: End date for the date range filter
-          schema:
-            type: string
-            format: date
-      responses:
-        "200":
-          description: List of finance transactions retrieved successfully
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/FinanceTransaction"
-        "400":
-          $ref: "./starmedica-components.yml#/components/responses/400"
-        "401":
-          $ref: "./starmedica-components.yml#/components/responses/401"
-        "403":
-          $ref: "./starmedica-components.yml#/components/responses/403"
-        "404":
-          $ref: "./starmedica-components.yml#/components/responses/404"
-        "500":
-          $ref: "./starmedica-components.yml#/components/responses/500"
-  /api/v1/health-professional/{healthProfessionalId}/finances/details:
-    get:
-      tags:
-        - Finances
+        - Transactions
       summary: Get health professional's finance details
       description: Retrieves the finance details for a specific health professional, including bank account information.
       operationId: getHealthProfessionalFinanceDetails
       parameters:
-        - name: healthProfessionalId
+        - name: id
           in: path
           required: true
           description: Unique identifier of the health professional
@@ -140,10 +74,10 @@ paths:
           $ref: "./starmedica-components.yml#/components/responses/404"
         "500":
           $ref: "./starmedica-components.yml#/components/responses/500"
-  /api/v1/finances/{financeId}/details:
+  /transactions/{financeId}/details:
     patch:
       tags:
-        - Finances
+        - Transactions
       summary: Update health professional's finance details
       description: Updates the finance details for a specific health professional, including bank account information.
       operationId: updateHealthProfessionalFinanceDetails
@@ -173,15 +107,15 @@ paths:
           $ref: "./starmedica-components.yml#/components/responses/404"
         "500":
           $ref: "./starmedica-components.yml#/components/responses/500"
-  ? /api/v1/health-professional/{healthProfessionalId}/finances/transactions/{transactionId}
-  : get:
+  /transactions/{transactionId}:
+    get:
       tags:
-        - Finances
+        - Transactions
       summary: Get a specific finance transaction
       description: Retrieves a specific finance transaction for a health professional by its unique identifier.
       operationId: getSpecificFinanceTransaction
       parameters:
-        - name: healthProfessionalId
+        - name: id
           in: path
           required: true
           description: Unique identifier of the health professional
@@ -199,7 +133,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/FinanceTransaction"
+                $ref: "./starmedica-components.yml#/components/schemas/FinanceTransaction"
         "400":
           $ref: "./starmedica-components.yml#/components/responses/400"
         "401":
@@ -293,33 +227,3 @@ components:
         - accountHolderName
         - routingNumber
         - accountType
-
-    FinanceTransaction:
-      type: object
-      properties:
-        transactionId:
-          type: string
-          description: Unique identifier of the transaction.
-        amount:
-          type: number
-          format: double
-          description: Amount of the transaction.
-        transactionDate:
-          type: string
-          format: date
-          description: Date when the transaction was processed.
-        status:
-          type: string
-          description: Current status of the transaction (e.g., pending, paid, confirmed).
-        paymentMethod:
-          type: string
-          description: Method used for the transaction (e.g., direct deposit, check).
-        description:
-          type: string
-          description: Description or notes regarding the transaction.
-      required:
-        - transactionId
-        - amount
-        - transactionDate
-        - status
-        - paymentMethod

@@ -21,7 +21,7 @@ tags:
   - name: Studies
     description: Operations available to handle episode's estudies
 paths:
-  /patients/{id}:
+  /patients/{mpid}:
     get:
       tags:
         - Patients
@@ -31,10 +31,10 @@ paths:
         By passing in the appropriate options, you can search for
         available inventory in the system
       parameters:
-        - name: id
+        - name: mpid
           in: path
           required: true
-          description: Patient id
+          description: Master Patient Id
           schema:
             type: string
       responses:
@@ -54,7 +54,7 @@ paths:
           $ref: "./starmedica-components.yml#/components/responses/404"
         "500":
           $ref: "./starmedica-components.yml#/components/responses/500"
-  /patients/{id}/episodes:
+  /patients/{mpid}/episodes:
     get:
       tags:
         - Episodes
@@ -64,10 +64,10 @@ paths:
         By passing in the appropriate options, you can search for
         available inventory in the system
       parameters:
-        - name: id
+        - name: mpid
           in: path
           required: true
-          description: Patient id
+          description: Master Patient Id
           schema:
             type: string
       responses:
@@ -89,7 +89,7 @@ paths:
           $ref: "./starmedica-components.yml#/components/responses/404"
         "500":
           $ref: "./starmedica-components.yml#/components/responses/500"
-  /patients/{id}/episodes/{episodeId}/studies:
+  /episodes/{episodeId}/studies:
     get:
       tags:
         - Studies
@@ -99,12 +99,6 @@ paths:
         By passing in the appropriate options, you can search for
         available inventory in the system
       parameters:
-        - name: id
-          in: path
-          required: true
-          description: Patient Id
-          schema:
-            type: string
         - name: episodeId
           in: path
           required: true
@@ -128,7 +122,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/Study"
+                  $ref: "./starmedica-components.yml#/components/schemas/Study"
         "400":
           $ref: "./starmedica-components.yml#/components/responses/400"
         "401":
@@ -139,58 +133,3 @@ paths:
           $ref: "./starmedica-components.yml#/components/responses/404"
         "500":
           $ref: "./starmedica-components.yml#/components/responses/500"
-
-components:
-  schemas:
-    Study:
-      type: object
-      properties:
-        benefitId:
-          type: string
-          maxLength: 10
-          description: ID of the benefit (prestacion)
-        benefitName:
-          type: string
-          maxLength: 100
-          description: Name of the benefit
-        subscriptor:
-          type: string
-          maxLength: 100
-          description: Subscriptor
-        subscription:
-          type: string
-          maxLength: 100
-          description: Subscription
-        category:
-          type: string
-          maxLength: 20
-          description: Category of the study
-        subcategory:
-          type: string
-          maxLength: 20
-          description: Subcategory of the study
-        startDate:
-          type: string
-          description: Start date of the benefit YYYY-MM-DD (IBGDT)
-          example: "2023-12-22"
-          maxLength: 10
-        startTime:
-          type: string
-          description: Start time of the benefit HH:MM (IBZT)
-          example: "14:01"
-          maxLength: 5
-        resultStatus:
-          type: string
-          maxLength: 2
-          description: Status of the result (ESTADO_RES)
-          example: "A"
-        resURL:
-          type: string
-          maxLength: 400
-          example: "http://172.31.2.72:8080/launch?&AccessionNumber=-24-24-24l4aZFSJ11qYlipe2RyXqzCtSOWoaS5B6CUEkF4-2BDKKM-3D&action=viewaccession&e"
-          description: URL of the result of this study
-        intURL:
-          type: string
-          maxLength: 400
-          example: "http://172.31.2.72:8080/launch?&AccessionNumber=-24-24-24l4aZFSJ11qYlipe2RyXqzCtSOWoaS5B6CUEkF4-2BDKKM-3D&action=viewaccession&e"
-          description: URL of the interpretation of this study

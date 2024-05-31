@@ -65,6 +65,32 @@ paths:
           $ref: "./starmedica-components.yml#/components/responses/404"
         "500":
           $ref: "./starmedica-components.yml#/components/responses/500"
+    get:
+      tags:
+        - Health Professionals
+      summary: Get information for a health professional
+      operationId: getHealthProfessionals
+      description: |
+        Get the list of the health professionals
+      responses:
+        "200":
+          description: Health professionals retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/HealthProfessionalResponse"
+        "400":
+          $ref: "./starmedica-components.yml#/components/responses/400"
+        "401":
+          $ref: "./starmedica-components.yml#/components/responses/401"
+        "403":
+          $ref: "./starmedica-components.yml#/components/responses/403"
+        "404":
+          $ref: "./starmedica-components.yml#/components/responses/404"
+        "500":
+          $ref: "./starmedica-components.yml#/components/responses/500"
   /health-professionals/{id}:
     get:
       tags:
@@ -155,34 +181,6 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/Degree"
-        "400":
-          $ref: "./starmedica-components.yml#/components/responses/400"
-        "401":
-          $ref: "./starmedica-components.yml#/components/responses/401"
-        "403":
-          $ref: "./starmedica-components.yml#/components/responses/403"
-        "404":
-          $ref: "./starmedica-components.yml#/components/responses/404"
-        "500":
-          $ref: "./starmedica-components.yml#/components/responses/500"
-  /degrees:
-    post:
-      tags:
-        - Episodes
-      summary: Save a degree for a health professional
-      operationId: createDegrees
-      requestBody:
-        content:
-          multipart/form-data:
-            schema:
-              $ref: "#/components/schemas/Degree"
-      responses:
-        "200":
-          description: Episodes for a health professional created successfully
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Degree"
         "400":
           $ref: "./starmedica-components.yml#/components/responses/400"
         "401":
@@ -442,7 +440,86 @@ paths:
           $ref: "./starmedica-components.yml#/components/responses/404"
         "500":
           $ref: "./starmedica-components.yml#/components/responses/500"
-  /api/v1/health-professionals/{professionalId}/notifications:
+  /health-professionals/{id}/episodes:
+    get:
+      tags:
+        - Episodes
+      summary: Gets a patients episodes
+      operationId: getHealthProfessionalEpisodes
+      description: |
+        By passing in the appropriate options, you can search for
+        available inventory in the system
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Health Professional id
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Health Professional episodes retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "./starmedica-components.yml#/components/schemas/Episode"
+        "400":
+          $ref: "./starmedica-components.yml#/components/responses/400"
+        "401":
+          $ref: "./starmedica-components.yml#/components/responses/401"
+        "403":
+          $ref: "./starmedica-components.yml#/components/responses/403"
+        "404":
+          $ref: "./starmedica-components.yml#/components/responses/404"
+        "500":
+          $ref: "./starmedica-components.yml#/components/responses/500"
+  /health-professionals/{id}/studies:
+    get:
+      tags:
+        - Studies
+      summary: Gets a Health Professional studies
+      operationId: getHealthProfessionalStudies
+      description: |
+        By passing in the appropriate options, you can search for
+        available inventory in the system
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Health Professional Id
+          schema:
+            type: string
+        - name: type
+          in: query
+          required: true
+          description: Type of study lab or imaging (L/I)
+          schema:
+            type: string
+            description: Type of study lab or imaging (L/I)
+            maxLength: 1
+            example: "L"
+      responses:
+        "200":
+          description: Health Professional studies retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "./starmedica-components.yml#/components/schemas/Study"
+        "400":
+          $ref: "./starmedica-components.yml#/components/responses/400"
+        "401":
+          $ref: "./starmedica-components.yml#/components/responses/401"
+        "403":
+          $ref: "./starmedica-components.yml#/components/responses/403"
+        "404":
+          $ref: "./starmedica-components.yml#/components/responses/404"
+        "500":
+          $ref: "./starmedica-components.yml#/components/responses/500"
+  /health-professionals/{id}/notifications:
     get:
       summary: Retrieve a list of notifications for a specific professional.
       tags:
@@ -450,7 +527,7 @@ paths:
       description: This endpoint retrieves all notifications for the professional with the specified ID.
       parameters:
         - in: path
-          name: professionalId
+          name: id
           required: true
           schema:
             type: string
@@ -472,7 +549,73 @@ paths:
         "404":
           $ref: "./starmedica-components.yml#/components/responses/404"
         "500":
-          $ref: "./starmedica-components.yml#/components/responses/500" 
+          $ref: "./starmedica-components.yml#/components/responses/500"
+  /health-professional/{id}/transactions:
+    get:
+      tags:
+        - Transactions
+      summary: Get all finance transactions for a health professional
+      description: Retrieves a list of all finance transactions for a specific health professional.
+      operationId: getAllFinanceTransactionsForHealthProfessional
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Unique identifier of the health professional
+          schema:
+            type: string
+        - name: status
+          in: query
+          required: false
+          description: Filter transactions by status (paid or pending)
+          schema:
+            type: string
+            enum:
+              - paid
+              - pending
+        - name: dateFilter
+          in: query
+          required: false
+          description: Filter transactions by predefined date ranges
+          schema:
+            type: string
+            enum:
+              - last_24_hours
+              - last_7_days
+              - last_month
+        - name: startDate
+          in: query
+          required: false
+          description: Start date for the date range filter
+          schema:
+            type: string
+            format: date
+        - name: endDate
+          in: query
+          required: false
+          description: End date for the date range filter
+          schema:
+            type: string
+            format: date
+      responses:
+        "200":
+          description: List of finance transactions retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "./starmedica-components.yml#/components/schemas/FinanceTransaction"
+        "400":
+          $ref: "./starmedica-components.yml#/components/responses/400"
+        "401":
+          $ref: "./starmedica-components.yml#/components/responses/401"
+        "403":
+          $ref: "./starmedica-components.yml#/components/responses/403"
+        "404":
+          $ref: "./starmedica-components.yml#/components/responses/404"
+        "500":
+          $ref: "./starmedica-components.yml#/components/responses/500"
   /health-professionals/{id}/productivity:
     get:
       tags:
@@ -526,7 +669,7 @@ paths:
                 type: array
                 items:
                   $ref: "./starmedica-components.yml#/components/schemas/PreDischargeResponse"
-  /api/v1/health-professionals/{id}/surveys:
+  /health-professionals/{id}/surveys:
     get:
       tags:
         - Surveys
