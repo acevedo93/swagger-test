@@ -19,7 +19,7 @@ tags:
   - name: Episodes
     description: Operations available to handle patient's episodes
   - name: Studies
-    description: Operations available to handle episode's estudies
+    description: Operations available to handle episode's studies
 paths:
   /patients/{mpid}:
     get:
@@ -89,7 +89,7 @@ paths:
           $ref: "./starmedica-components.yml#/components/responses/404"
         "500":
           $ref: "./starmedica-components.yml#/components/responses/500"
-  /episodes/{episodeId}/studies:
+  /episodes/{mpid}/studies:
     get:
       tags:
         - Studies
@@ -99,7 +99,7 @@ paths:
         By passing in the appropriate options, you can search for
         available inventory in the system
       parameters:
-        - name: episodeId
+        - name: mpid
           in: path
           required: true
           description: Patient Episode Id
@@ -133,3 +133,104 @@ paths:
           $ref: "./starmedica-components.yml#/components/responses/404"
         "500":
           $ref: "./starmedica-components.yml#/components/responses/500"
+  /episodes/{mpid}:
+    patch:
+      tags:
+        - Episodes
+      summary: Update an episode
+      operationId: updateEpisode
+      description: Updates a specific episode by its ID.
+      parameters:
+        - name: mpid
+          in: path
+          required: true
+          description: Episode ID
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EpisodeUpdateRequest"
+      responses:
+        "200":
+          description: Episode updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "./starmedica-components.yml#/components/schemas/Episode"
+        "400":
+          $ref: "./starmedica-components.yml#/components/responses/400"
+        "401":
+          $ref: "./starmedica-components.yml#/components/responses/401"
+        "403":
+          $ref: "./starmedica-components.yml#/components/responses/403"
+        "404":
+          $ref: "./starmedica-components.yml#/components/responses/404"
+        "500":
+          $ref: "./starmedica-components.yml#/components/responses/500"
+components:
+  schemas:
+    EpisodeUpdateRequest:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Status of the episode
+        description:
+          type: string
+          description: Description of the episode
+        startDate:
+          type: string
+          format: date
+          description: Start date of the episode
+        endDate:
+          type: string
+          format: date
+          description: End date of the episode
+      required:
+        - status
+        - description
+        - startDate
+        - endDate
+    Patient:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        age:
+          type: integer
+    Episode:
+      type: object
+      properties:
+        id:
+          type: string
+        patientId:
+          type: string
+        status:
+          type: string
+        description:
+          type: string
+        startDate:
+          type: string
+          format: date
+        endDate:
+          type: string
+          format: date
+    Study:
+      type: object
+      properties:
+        id:
+          type: string
+        mpid:
+          type: string
+        type:
+          type: string
+        description:
+          type: string
+        date:
+          type: string
+          format: date

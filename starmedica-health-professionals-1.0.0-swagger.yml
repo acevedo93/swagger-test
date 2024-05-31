@@ -406,9 +406,33 @@ paths:
         - name: medicalFacility
           in: query
           required: false
-          description: Filter patients by medical facility (optional)
+          description: Filter transactions by Hospital ID
           schema:
             type: string
+        - name: dateFilter
+          in: query
+          required: false
+          description: Filter transactions by predefined date ranges
+          schema:
+            type: string
+            enum:
+              - last_24_hours
+              - last_7_days
+              - last_month
+        - name: startDate
+          in: query
+          required: false
+          description: Start date for the date range filter
+          schema:
+            type: string
+            format: date
+        - name: endDate
+          in: query
+          required: false
+          description: End date for the date range filter
+          schema:
+            type: string
+            format: date
         - name: name
           in: query
           required: false
@@ -456,6 +480,36 @@ paths:
           description: Health Professional id
           schema:
             type: string
+        - name: medicalFacility
+          in: query
+          required: false
+          description: Filter transactions by Hospital ID
+          schema:
+            type: string
+        - name: dateFilter
+          in: query
+          required: false
+          description: Filter transactions by predefined date ranges
+          schema:
+            type: string
+            enum:
+              - last_24_hours
+              - last_7_days
+              - last_month
+        - name: startDate
+          in: query
+          required: false
+          description: Start date for the date range filter
+          schema:
+            type: string
+            format: date
+        - name: endDate
+          in: query
+          required: false
+          description: End date for the date range filter
+          schema:
+            type: string
+            format: date
       responses:
         "200":
           description: Health Professional episodes retrieved successfully
@@ -500,6 +554,36 @@ paths:
             description: Type of study lab or imaging (L/I)
             maxLength: 1
             example: "L"
+        - name: medicalFacility
+          in: query
+          required: false
+          description: Filter transactions by Hospital ID
+          schema:
+            type: string
+        - name: dateFilter
+          in: query
+          required: false
+          description: Filter transactions by predefined date ranges
+          schema:
+            type: string
+            enum:
+              - last_24_hours
+              - last_7_days
+              - last_month
+        - name: startDate
+          in: query
+          required: false
+          description: Start date for the date range filter
+          schema:
+            type: string
+            format: date
+        - name: endDate
+          in: query
+          required: false
+          description: End date for the date range filter
+          schema:
+            type: string
+            format: date
       responses:
         "200":
           description: Health Professional studies retrieved successfully
@@ -564,6 +648,12 @@ paths:
           description: Unique identifier of the health professional
           schema:
             type: string
+        - name: medicalFacility
+          in: query
+          required: false
+          description: Filter transactions by Hospital ID
+          schema:
+            type: string
         - name: status
           in: query
           required: false
@@ -620,23 +710,25 @@ paths:
     get:
       tags:
         - Productivity
-      summary: Get the stadistic information about the episodes of the health professional
-      description: Retrieves the patients for a credentialed health professional. Optionally, the patients can be filtered by medical facility, name or last name.
-      operationId: getProductivity
+      summary: Gets historical performance
+      operationId: getHistoricalPerformance
+      description: |
+        Retrieves current performance, historical average, and monthly data for a doctor
       parameters:
         - name: id
           in: path
           required: true
-          description: ID of the credentialed health professional
+          description: Doctor id
           schema:
             type: string
       responses:
         "200":
-          description: List of patients retrieved successfully
+          description: Historical performance and monthly data retrieved successfully
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Productivity"
+
         "400":
           $ref: "./starmedica-components.yml#/components/responses/400"
         "401":
@@ -980,12 +1072,46 @@ components:
       type: object
       description: Get the data and metadata for render reports and charts
       properties:
-        data:
-          type: object
-          description: Updated status of the shift
-        metadata:
-          type: object
-          description: Updated comments for the shift
+        performance:
+          type: array
+          items:
+            type: object
+            properties:
+              category:
+                type: string
+              currentPerformance:
+                type: string
+                example: "20%"
+              historicalAverage:
+                type: number
+                example: 200
+              trend:
+                type: string
+                enum: ["up", "down", "neutral"]
+                example: "up"
+        monthlyData:
+          type: array
+          items:
+            type: object
+            properties:
+              month:
+                type: string
+              admissions:
+                type: number
+              surgeries:
+                type: number
+              procedures:
+                type: number
+              imagingStudies:
+                type: number
+              labStudies:
+                type: number
+              uti:
+                type: number
+              uci:
+                type: number
+              emergencies:
+                type: number
     # #########################################################
     # #                   Notifications                      #
     # #########################################################
